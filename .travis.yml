@@ -4,7 +4,7 @@ jdk:
 deploy:
   provider: heroku
   api-key:
-    secure: $HEROKU_API_KEY
+    secure: 7Ydk0T9Um/g/r4bMiWnRy6raYogI6+qc6oIzKAZ03mEkXR+OkPIO3YNCR+sAWGuJOBIkgcHbbcjirECyAyzhJtcyrDLEftfKxC2sUQIMe3P7qSGyV3eRdfDyGjM1QgZxu29mQLzXvIaKeCZevManwA6rz8dI1nkqYMJ6EUeNVHVvqD1prAqkHb9DwD747XvTib+PNpE6Ouwwtp1ZmUY2CRgHrVv6iV9U3eHDSaDQ/umMmqNivLJiNeFvk1w+uBvdooLeNK/a4b7PutvmKDjkbgsHNNsARg7+gGGEkoVcy0NEI6OQI1mWOlzJ+AutmfbgKW6d/HMFk4qXd4Hsu/OcGcsKtjh/IeGmyvxwk2bhV7y6dpSStBomoQVGuZPFwc7AlhkQRYtxlyQOnNWU8FTvzfZnyNUdoxGlpeAqgt6hvfnyb0hmZjgt+APFOjksDBTc2DAxZkzUq1YhhYGwSezJtKOHY3V8nDOqtPou6szhiRyVpF56WjzHWj8ZeLIj1C0lsMv2YPN2XiGrRcjA++9O/z0UeIKUOjyOyz4ZeIC03+hwACTJpVAfkN7B9WDAm/ornDubgrIE2dOpz/VYOmGnZZAJFchz3oaZzGQgn4xlX0O+JIpPsyiIcytvPQKRxnR1uukjvIK0VJmn8K1+SL67X9tsh++6wbVN/gdQ0G5DxM4=
   app: hospital-system-app
 before_install:
   - chmod +x mvnw
