@@ -6,3 +6,5 @@ deploy:
   api-key:
     secure: $HEROKU_API_KEY
   app: hospital-system-app
+before_install:
+  - chmod +x mvnw
