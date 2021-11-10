@@ -13,7 +13,7 @@ public class EmployerData {
     private EmployerStatus status;
     private Time startWorkingTime;
     private Time endWorkingTime;
-    private DoctorData doctorData = new DoctorData();
+    private DoctorData doctorData;
 
     public BigInteger getEmployerDataId() {
         return employerDataId;
@@ -63,4 +63,39 @@ public class EmployerData {
         this.doctorData = doctorData;
     }
 
+    public static class Builder{
+        private EmployerData employer;
+
+        public Builder(){
+            employer = new EmployerData();
+        }
+        public Builder WithEmployerDataId(BigInteger employerDataId){
+            employer.employerDataId = employerDataId;
+            return this;
+        }
+        public Builder WithHiringDate(Date hiringDate){
+            employer.hiringDate = hiringDate;
+            return this;
+        }
+        public Builder WithStatus(EmployerStatus status){
+            employer.status = status;
+            return this;
+        }
+        public Builder WithStartWorkingTime(Time startWorkingTime){
+            employer.startWorkingTime = startWorkingTime;
+            return this;
+        }
+        public Builder WithEndWorkingTime(Time endWorkingTime){
+            employer.endWorkingTime = endWorkingTime;
+            return this;
+        }
+        public Builder WithDoctorData(DoctorData doctorData){
+            employer.doctorData = doctorData;
+            return this;
+        }
+        public EmployerData build(){
+            return employer;
+        }
+
+    }
 }
