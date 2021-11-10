@@ -1,4 +1,4 @@
-package com.teama.hospitalsystem.models;
+package com.teama.hospitalsystem.util;
 
 public enum AppointmentStatus {
     Free,

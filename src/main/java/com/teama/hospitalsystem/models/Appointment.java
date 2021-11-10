@@ -1,5 +1,7 @@
 package com.teama.hospitalsystem.models;
 
+import com.teama.hospitalsystem.util.AppointmentStatus;
+
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Objects;
