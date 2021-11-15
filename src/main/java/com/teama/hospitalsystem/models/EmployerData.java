@@ -8,8 +8,8 @@ import java.sql.Time;
 import java.util.Date;
 
 public class EmployerData {
-    private BigInteger employerDataId;
-    private Date hiringDate;
+    private final BigInteger employerDataId;
+    private final Date hiringDate;
     private EmployerStatus status;
     private Time startWorkingTime;
     private Time endWorkingTime;
@@ -19,16 +19,8 @@ public class EmployerData {
         return employerDataId;
     }
 
-    public void setEmployerDataId(BigInteger employerDataId) {
-        this.employerDataId = employerDataId;
-    }
-
     public Date getHiringDate() {
         return hiringDate;
-    }
-
-    public void setHiringDate(Date hiringDate) {
-        this.hiringDate = hiringDate;
     }
 
     public EmployerStatus getStatus() {
@@ -63,39 +55,59 @@ public class EmployerData {
         this.doctorData = doctorData;
     }
 
+    private EmployerData(Builder builder){
+        this.employerDataId = builder.employerDataId;
+        this.hiringDate = builder.hiringDate;
+        this.status = builder.status;
+        this.startWorkingTime = builder.startWorkingTime;
+        this.endWorkingTime = builder.endWorkingTime;
+        this.doctorData = builder.doctorData;
+    }
+
     public static class Builder{
-        private EmployerData employer;
+        private final BigInteger employerDataId;
+        private final Date hiringDate;
+        private EmployerStatus status;
+        private Time startWorkingTime;
+        private Time endWorkingTime;
+        private DoctorData doctorData;
 
-        public Builder(){
-            employer = new EmployerData();
+        public Builder(BigInteger employerDataId, Date hiringDate) {
+            this.employerDataId = employerDataId;
+            this.hiringDate = hiringDate;
         }
-        public Builder WithEmployerDataId(BigInteger employerDataId){
-            employer.employerDataId = employerDataId;
+
+        public Builder withStatus(EmployerStatus status){
+            this.status = status;
             return this;
         }
-        public Builder WithHiringDate(Date hiringDate){
-            employer.hiringDate = hiringDate;
+        public Builder withStartWorkingTime(Time startWorkingTime){
+            this.startWorkingTime = startWorkingTime;
             return this;
         }
-        public Builder WithStatus(EmployerStatus status){
-            employer.status = status;
+        public Builder withEndWorkingTime(Time endWorkingTime){
+            this.endWorkingTime = endWorkingTime;
             return this;
         }
-        public Builder WithStartWorkingTime(Time startWorkingTime){
-            employer.startWorkingTime = startWorkingTime;
+        public Builder withDoctorData(DoctorData doctorData){
+            this.doctorData = doctorData;
             return this;
         }
-        public Builder WithEndWorkingTime(Time endWorkingTime){
-            employer.endWorkingTime = endWorkingTime;
-            return this;
-        }
-        public Builder WithDoctorData(DoctorData doctorData){
-            employer.doctorData = doctorData;
-            return this;
-        }
+
         public EmployerData build(){
-            return employer;
+            return new EmployerData(this);
         }
 
+        @Override
+        public String toString() {
+            return "EmployerData{" +
+                    "employerDataId=" + employerDataId +
+                    ", hiringDate" + hiringDate +
+                    ", status" + status +
+                    ", startWorkingTime" + startWorkingTime +
+                    ", endWorkingTime" + endWorkingTime +
+                    ", doctorData" + doctorData +
+                    "}";
+        }
     }
 }
