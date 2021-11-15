@@ -18,7 +18,7 @@ public enum EmployerStatus {
 
     public static EmployerStatus fromId(BigInteger id) throws IllegalArgumentException{
         for(EmployerStatus employerStatus : values()){
-            if(employerStatus.id.equals(id)){
+            if(employerStatus.id.compareTo(id) == 0){
                 return employerStatus;
             }
         }
