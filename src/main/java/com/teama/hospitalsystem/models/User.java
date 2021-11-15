@@ -4,6 +4,7 @@ import com.teama.hospitalsystem.util.UserRole;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.Objects;
 
 public class User {
     private final BigInteger id;
@@ -84,17 +85,17 @@ public class User {
         private BigInteger id = BigInteger.ZERO;
         private BigInteger login = BigInteger.ZERO;
         private String password = "";
-        private String name = "";
-        private String phoneNumber = "";
-        private Date birthDate;
         private String email = "";
+        private Date birthDate;
+        private String name;
+        private String phoneNumber;
         private final UserRole role;
         private EmployerData employerData;
 
-        public Builder(BigInteger id, BigInteger login, UserRole role) {
+        public Builder(BigInteger id, BigInteger login, String name, String phoneNumber, UserRole role) {
+            this(name, phoneNumber, role);
             this.id = id;
             this.login = login;
-            this.role = role;
         }
 
         public Builder(String name, String phoneNumber, UserRole role) {
@@ -145,4 +146,40 @@ public class User {
         this.employerData = builder.employerData;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(phoneNumber, user.phoneNumber) &&
+                Objects.equals(birthDate, user.birthDate) &&
+                Objects.equals(email, user.email) &&
+                role == user.role &&
+                Objects.equals(employerData, user.employerData);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, login, password, name, phoneNumber,
+                birthDate, email, role, employerData);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login=" + login +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", birthDate=" + birthDate +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", employerData=" + employerData +
+                '}';
+    }
 }
