@@ -109,6 +109,11 @@ public class User {
             return this;
         }
 
+        public Builder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
         public Builder withPhoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
