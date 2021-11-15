@@ -6,8 +6,8 @@ import java.math.BigInteger;
 import java.util.Date;
 
 public class User {
-    private BigInteger id;
-    private BigInteger login;
+    private final BigInteger id;
+    private final BigInteger login;
     private String password;
     private String name;
     private String phoneNumber;
@@ -20,16 +20,8 @@ public class User {
         return id;
     }
 
-    public void setId(BigInteger id) {
-        this.id = id;
-    }
-
     public BigInteger getLogin() {
         return login;
-    }
-
-    public void setLogin(BigInteger login) {
-        this.login = login;
     }
 
     public String getPassword() {
@@ -89,60 +81,68 @@ public class User {
     }
 
     public static class Builder {
-        private User user;
+        private BigInteger id = BigInteger.ZERO;
+        private BigInteger login = BigInteger.ZERO;
+        private String password = "";
+        private String name = "";
+        private String phoneNumber = "";
+        private Date birthDate;
+        private String email = "";
+        private final UserRole role;
+        private EmployerData employerData;
 
-        public Builder() {
-            user = new User();
+        public Builder(BigInteger id, BigInteger login, UserRole role) {
+            this.id = id;
+            this.login = login;
+            this.role = role;
         }
 
-        public Builder withId(BigInteger id) {
-            user.id = id;
-            return this;
-        }
-
-        public Builder withLogin(BigInteger login) {
-            user.login = login;
-            return this;
-        }
-
-        public Builder withPassword(String password) {
-            user.password = password;
-            return this;
+        public Builder(String name, String phoneNumber, UserRole role) {
+            this.name = name;
+            this.phoneNumber = phoneNumber;
+            this.role = role;
         }
 
         public Builder withName(String name) {
-            user.name = name;
+            this.name = name;
             return this;
         }
 
         public Builder withPhoneNumber(String phoneNumber) {
-            user.phoneNumber = phoneNumber;
+            this.phoneNumber = phoneNumber;
             return this;
         }
 
         public Builder withBirthDate(Date birthDate) {
-            user.birthDate = birthDate;
+            this.birthDate = birthDate;
             return this;
         }
 
         public Builder withEmail(String email) {
-            user.email = email;
-            return this;
-        }
-
-        public Builder withUserRole(UserRole role) {
-            user.role = role;
+            this.email = email;
             return this;
         }
 
         public Builder withEmployerData(EmployerData employerData) {
-            user.employerData = employerData;
+            this.employerData = employerData;
             return this;
         }
 
         public User build() {
-            return user;
+            return new User(this);
         }
+    }
+
+    private User(Builder builder) {
+        this.id = builder.id;
+        this.login = builder.login;
+        this.name = builder.name;
+        this.password = builder.password;
+        this.phoneNumber = builder.phoneNumber;
+        this.birthDate = builder.birthDate;
+        this.email = builder.email;
+        this.role = builder.role;
+        this.employerData = builder.employerData;
     }
 
 }
