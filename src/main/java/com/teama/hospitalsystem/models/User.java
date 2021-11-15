@@ -82,41 +82,28 @@ public class User {
     }
 
     public static class Builder {
-        private BigInteger id = BigInteger.ZERO;
-        private BigInteger login = BigInteger.ZERO;
-        private String password = "";
         private String email = "";
         private Date birthDate;
-        private String name;
-        private String phoneNumber;
-        private final UserRole role;
         private EmployerData employerData;
+        private BigInteger id;
+        private BigInteger login;
+        private final String name;
+        private final String password;
+        private final UserRole role;
+        private final String phoneNumber;
 
-        public Builder(BigInteger id, BigInteger login, String name, String phoneNumber, UserRole role) {
-            this(name, phoneNumber, role);
+        public Builder(BigInteger id, BigInteger login, String name,
+                       String password, String phoneNumber, UserRole role) {
+            this(name, password, phoneNumber, role);
             this.id = id;
             this.login = login;
         }
 
-        public Builder(String name, String phoneNumber, UserRole role) {
+        public Builder(String name, String password, String phoneNumber, UserRole role) {
             this.name = name;
+            this.password = password;
             this.phoneNumber = phoneNumber;
             this.role = role;
-        }
-
-        public Builder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder withPassword(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder withPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-            return this;
         }
 
         public Builder withBirthDate(Date birthDate) {
