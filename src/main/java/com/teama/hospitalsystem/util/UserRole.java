@@ -3,33 +3,27 @@ package com.teama.hospitalsystem.util;
 import java.math.BigInteger;
 
 public enum UserRole {
-    Admin(1),
-    Doctor(2),
-    Registry(3),
-    Patient(4);
+    ADMIN(BigInteger.valueOf(1)),
+    DOCTOR(BigInteger.valueOf(2)),
+    REGISTRY(BigInteger.valueOf(3)),
+    PATIENT(BigInteger.valueOf(4));
 
-    private final int id;
+    private final BigInteger id;
 
-    UserRole(int i) {
-        id = i;
+    UserRole(BigInteger id) {
+        this.id = id;
     }
 
-    public int GetId() {
+    public BigInteger getId() {
         return id;
     }
 
     public static UserRole fromId(BigInteger id) throws IllegalArgumentException {
-        switch (id.intValue()) {
-            case 1:
-                return Admin;
-            case 2:
-                return Doctor;
-            case 3:
-                return Registry;
-            case 4:
-                return Patient;
-            default:
-                throw new IllegalArgumentException("invalid id");
+        for (UserRole role : UserRole.values()) {
+            if (role.getId().compareTo(id) == 0) {
+                return role;
+            }
         }
+        throw new IllegalArgumentException("invalid id");
     }
 }
