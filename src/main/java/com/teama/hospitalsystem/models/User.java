@@ -83,7 +83,7 @@ public class User {
 
     public static class Builder {
         private String email = "";
-        private Date birthDate;
+        private Date birthDate = null;
         private EmployerData employerData;
         private BigInteger id;
         private BigInteger login;
@@ -93,8 +93,8 @@ public class User {
         private final String phoneNumber;
 
         public Builder(BigInteger id, BigInteger login, String name,
-                       String password, String phoneNumber, UserRole role) {
-            this(name, password, phoneNumber, role);
+                       String phoneNumber, UserRole role) {
+            this(name, null, phoneNumber, role);
             this.id = id;
             this.login = login;
         }
