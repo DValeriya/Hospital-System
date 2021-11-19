@@ -4,11 +4,15 @@ import java.math.BigInteger;
 import java.util.Objects;
 
 public class DoctorSpecialization {
-    private final BigInteger specializationId;
+    private BigInteger specializationId;
     private final String title;
 
     public DoctorSpecialization(BigInteger specializationId, String title){
         this.specializationId = specializationId;
+        this.title = title;
+    }
+
+    public DoctorSpecialization(String title){
         this.title = title;
     }
 
