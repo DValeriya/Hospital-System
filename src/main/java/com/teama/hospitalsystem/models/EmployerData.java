@@ -8,12 +8,21 @@ import java.sql.Time;
 import java.util.Date;
 
 public class EmployerData {
-    private final BigInteger employerDataId;
-    private final Date hiringDate;
+    private BigInteger employerDataId;
+    private Date hiringDate;
     private EmployerStatus status;
     private Time startWorkingTime;
     private Time endWorkingTime;
     private DoctorData doctorData;
+
+    public EmployerData(BigInteger employerDataId, Date hiringDate, EmployerStatus status,
+                        Time startWorkingTime, Time endWorkingTime) {
+        this.employerDataId = employerDataId;
+        this.hiringDate = hiringDate;
+        this.status = status;
+        this.startWorkingTime = startWorkingTime;
+        this.endWorkingTime = endWorkingTime;
+    }
 
     public BigInteger getEmployerDataId() {
         return employerDataId;
@@ -55,49 +64,6 @@ public class EmployerData {
         this.doctorData = doctorData;
     }
 
-    private EmployerData(Builder builder){
-        this.employerDataId = builder.employerDataId;
-        this.hiringDate = builder.hiringDate;
-        this.status = builder.status;
-        this.startWorkingTime = builder.startWorkingTime;
-        this.endWorkingTime = builder.endWorkingTime;
-        this.doctorData = builder.doctorData;
-    }
-
-    public static class Builder{
-        private final BigInteger employerDataId;
-        private final Date hiringDate;
-        private EmployerStatus status;
-        private Time startWorkingTime;
-        private Time endWorkingTime;
-        private DoctorData doctorData;
-
-        public Builder(BigInteger employerDataId, Date hiringDate) {
-            this.employerDataId = employerDataId;
-            this.hiringDate = hiringDate;
-        }
-
-        public Builder withStatus(EmployerStatus status){
-            this.status = status;
-            return this;
-        }
-        public Builder withStartWorkingTime(Time startWorkingTime){
-            this.startWorkingTime = startWorkingTime;
-            return this;
-        }
-        public Builder withEndWorkingTime(Time endWorkingTime){
-            this.endWorkingTime = endWorkingTime;
-            return this;
-        }
-        public Builder withDoctorData(DoctorData doctorData){
-            this.doctorData = doctorData;
-            return this;
-        }
-
-        public EmployerData build(){
-            return new EmployerData(this);
-        }
-
         @Override
         public String toString() {
             return "EmployerData{" +
@@ -109,5 +75,4 @@ public class EmployerData {
                     ", doctorData" + doctorData +
                     "}";
         }
-    }
 }
