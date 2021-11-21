@@ -5,25 +5,16 @@ import java.util.Objects;
 
 public class DoctorSpecialization {
     private BigInteger specializationId;
-    private String title;
-    /* Ctor */
+    private final String title;
 
-    public DoctorSpecialization(){}
-
-    public DoctorSpecialization(String title, BigInteger specializationId){
+    public DoctorSpecialization(BigInteger specializationId, String title){
         this.specializationId = specializationId;
         this.title = title;
     }
-    /* Setters */
 
-    public void setSpecializationId(BigInteger specializationId) {
-        this.specializationId = specializationId;
-    }
-
-    public void setTitle(String title) {
+    public DoctorSpecialization(String title){
         this.title = title;
     }
-    /* Getters */
 
     public BigInteger getSpecializationId() {
         return specializationId;
@@ -32,7 +23,6 @@ public class DoctorSpecialization {
     public String getTitle() {
         return title;
     }
-    /* Object base methods override */
 
     @Override
     public String toString() {

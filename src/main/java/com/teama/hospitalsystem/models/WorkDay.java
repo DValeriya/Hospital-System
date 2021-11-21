@@ -2,6 +2,7 @@ package com.teama.hospitalsystem.models;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class WorkDay {
@@ -10,13 +11,11 @@ public class WorkDay {
     private Date date;
     private List<Appointment> appointments;
 
-    public WorkDay() { }
-
-    public WorkDay(BigInteger workDayId, BigInteger employerId, Date date, List<Appointment> appointments) {
+    public WorkDay(BigInteger workDayId, BigInteger employerId, Date date) {
         this.workDayId = workDayId;
         this.employerId = employerId;
         this.date = date;
-        this.appointments = appointments;
+        appointments = new LinkedList<>();
     }
 
     public BigInteger getWorkDayId() {
@@ -50,4 +49,9 @@ public class WorkDay {
     public void setAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
     }
+
+    public void addAppointments(Appointment appointment) {
+        appointments.add(appointment);
+    }
+
 }
