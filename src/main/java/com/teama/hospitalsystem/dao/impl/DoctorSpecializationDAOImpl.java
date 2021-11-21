@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -25,54 +25,30 @@ public class DoctorSpecializationDAOImpl implements DoctorSpecializationDAO {
     }
 
     @Override
-    public void createDoctorSpecialization(DoctorSpecialization specialization) {
-        try {
-            SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                    .withProcedureName(CREATE_DOCTOR_SPEC_PROCEDURE_NAME);
+    public void createDoctorSpecialization(DoctorSpecialization specialization) throws DataAccessException {
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName(CREATE_DOCTOR_SPEC_PROCEDURE_NAME);
 
-            Map<String, Object> inParamMap = new HashMap<>();
-            inParamMap.put("TITLE", specialization.getTitle());
-            SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+        Map<String, Object> inParamMap = new HashMap<>();
+        inParamMap.put("TITLE", specialization.getTitle());
+        SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
-            jdbcCall.execute(in);
-        } catch (DataAccessException ex) {
-            String str = ex.getMessage();
-        }
+        jdbcCall.execute(in);
     }
 
     @Override
-    public void deleteDoctorSpecialization(DoctorSpecialization specialization) {
-        try {
-            SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                    .withProcedureName(DELETE_DOCTOR_SPEC_PROCEDURE_NAME);
-
-            Map<String, Object> inParamMap = new HashMap<>();
-            inParamMap.put("SPEC_ID", specialization.getSpecializationId());
-            SqlParameterSource in = new MapSqlParameterSource(inParamMap);
-
-            jdbcCall.execute(in);
-        } catch (DataAccessException ex) {
-            String str = ex.getMessage();
-        }
+    public void deleteDoctorSpecialization(DoctorSpecialization specialization) throws DataAccessException {
+        Object[] args = new Object[] { specialization.getSpecializationId() };
+        jdbcTemplate.update(DELETE_DOCTOR_SPEC_BY_ID, args);
     }
 
     @Override
-    public DoctorSpecialization getDoctorSpecializationById(BigInteger id) {
-        try {
-            return jdbcTemplate.queryForObject(SELECT_DOCTOR_SPEC_BY_ID,
-                    new DoctorSpecializationRowMapper(), id);
-        } catch (DataAccessException ex) {
-            return null;
-        }
+    public DoctorSpecialization getDoctorSpecializationById(BigInteger id) throws DataAccessException {
+        return jdbcTemplate.queryForObject(SELECT_DOCTOR_SPEC_BY_ID, new DoctorSpecializationRowMapper(), id);
     }
 
     @Override
-    public List<DoctorSpecialization> getDoctorSpecializationList() {
-        try {
-            return jdbcTemplate.query(SELECT_DOCTOR_SPECS,
-                    new DoctorSpecializationRowMapper());
-        } catch (DataAccessException ex) {
-            return null;
-        }
+    public Collection<DoctorSpecialization> getDoctorSpecializationList() throws DataAccessException {
+            return jdbcTemplate.query(SELECT_DOCTOR_SPECS, new DoctorSpecializationRowMapper());
     }
 }
