@@ -6,7 +6,7 @@ import com.teama.hospitalsystem.util.EAVObjTypesID;
 import com.teama.hospitalsystem.util.UserRole;
 
 import java.math.BigInteger;
-import java.util.List;
+import java.util.Collection;
 
 public interface UserDAO {
     String CREATE_USER_PROCEDURE_NAME = "CREATE_USER";
@@ -39,17 +39,9 @@ public interface UserDAO {
     String SELECT_USERS_BY_ROLE = SELECT_USERS +
             " AND ROLE.LIST_VALUE_ID = ?";
 
-    String SELECT_EMPLOYER_DATA_BY_USER_ID = "SELECT EMP.OBJECT_ID FROM " +
-            "OBJECTS EMP, OBJECTS USERS " +
-            "WHERE EMP.PARENT_ID = USERS.OBJECT_ID " +
-            "AND USERS.OBJECT_TYPE_ID = " + EAVObjTypesID.USER +
-            " AND EMP.OBJECT_TYPE_ID = " + EAVObjTypesID.EMPLOYER_DATA +
-            " AND USERS.OBJECT_ID = ?";
-
     void createUser(User user);
     User getUserByLoginAndPassword(BigInteger login, String password);
     User getUserById(BigInteger id);
-    List<User> getUsersList();
-    List<User> getUsersListByRole(UserRole role);
-    BigInteger getEmployerDataId(BigInteger userId);
+    Collection<User> getUsersList();
+    Collection<User> getUsersListByRole(UserRole role);
 }

@@ -12,8 +12,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -25,71 +25,40 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void createUser(User user) {
-        try {
-            SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                    .withProcedureName(CREATE_USER_PROCEDURE_NAME);
+    public void createUser(User user) throws DataAccessException {
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName(CREATE_USER_PROCEDURE_NAME);
 
-            Map<String, Object> inParamMap = new HashMap<>();
-            inParamMap.put("NAME", user.getName());
-            inParamMap.put("PASSWORD", user.getPassword());
-            inParamMap.put("PHONENUMBER", user.getPhoneNumber());
-            inParamMap.put("BIRTHDATE", user.getBirthDate());
-            inParamMap.put("EMAIL", user.getEmail());
-            inParamMap.put("ROLE", user.getRole().getId());
-            SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+        Map<String, Object> inParamMap = new HashMap<>();
+        inParamMap.put("NAME", user.getName());
+        inParamMap.put("PASSWORD", user.getPassword());
+        inParamMap.put("PHONENUMBER", user.getPhoneNumber());
+        inParamMap.put("BIRTHDATE", user.getBirthDate());
+        inParamMap.put("EMAIL", user.getEmail());
+        inParamMap.put("ROLE", user.getRole().getId());
+        SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
-            jdbcCall.execute(in);
-        } catch (DataAccessException ex) {
-            String str = ex.getMessage();
-        }
+        jdbcCall.execute(in);
     }
 
     @Override
-    public User getUserByLoginAndPassword(BigInteger login, String password) {
-        try {
-            return jdbcTemplate.queryForObject(SELECT_USER_BY_LOGIN_AND_PASSWORD,
-                    new UserRowMapper(), login, password);
-        } catch (DataAccessException ex) {
-            return null;
-        }
+    public User getUserByLoginAndPassword(BigInteger login, String password) throws DataAccessException {
+        return jdbcTemplate.queryForObject(SELECT_USER_BY_LOGIN_AND_PASSWORD,
+                new UserRowMapper(), login, password);
     }
 
     @Override
-    public User getUserById(BigInteger id) {
-        try {
-            return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, new UserRowMapper(), id);
-        } catch (DataAccessException ex) {
-            return null;
-        }
+    public User getUserById(BigInteger id) throws DataAccessException {
+        return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, new UserRowMapper(), id);
     }
 
     @Override
-    public List<User> getUsersList() {
-        try {
-            return jdbcTemplate.query(SELECT_USERS, new UserRowMapper());
-        } catch (DataAccessException ex) {
-            return null;
-        }
+    public Collection<User> getUsersList() throws DataAccessException {
+        return jdbcTemplate.query(SELECT_USERS, new UserRowMapper());
     }
 
     @Override
-    public List<User> getUsersListByRole(UserRole role) {
-        try {
-            return jdbcTemplate.query(SELECT_USERS_BY_ROLE, new UserRowMapper(), role.getId());
-        } catch (DataAccessException ex) {
-            return null;
-        }
-    }
-
-    @Override
-    public BigInteger getEmployerDataId(BigInteger userId) {
-        try {
-            Integer id = jdbcTemplate.queryForObject(SELECT_EMPLOYER_DATA_BY_USER_ID,
-                    Integer.class, userId);
-            return id != null ? BigInteger.valueOf(id) : null;
-        } catch (DataAccessException ex) {
-            return null;
-        }
+    public Collection<User> getUsersListByRole(UserRole role) throws DataAccessException {
+        return jdbcTemplate.query(SELECT_USERS_BY_ROLE, new UserRowMapper(), role.getId());
     }
 }
