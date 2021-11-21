@@ -48,6 +48,12 @@ public class DoctorSpecializationDAOImpl implements DoctorSpecializationDAO {
     }
 
     @Override
+    public DoctorSpecialization getDoctorSpecializationByDoctorDataId(BigInteger id) {
+        return jdbcTemplate.queryForObject(SELECT_DOCTOR_SPEC_BY_DOC_DATA_ID,
+                new DoctorSpecializationRowMapper(), id);
+    }
+
+    @Override
     public Collection<DoctorSpecialization> getDoctorSpecializationList() throws DataAccessException {
             return jdbcTemplate.query(SELECT_DOCTOR_SPECS, new DoctorSpecializationRowMapper());
     }

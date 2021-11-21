@@ -17,8 +17,14 @@ public interface DoctorSpecializationDAO {
     String SELECT_DOCTOR_SPEC_BY_ID = SELECT_DOCTOR_SPECS +
             " AND OBJECT_ID = ?";
 
+    String SELECT_DOCTOR_SPEC_BY_DOC_DATA_ID = "SELECT SPECS.OBJECT_ID AS id, SPECS.NAME AS title " +
+            "FROM OBJECTS SPECS " +
+            "LEFT JOIN OBJREFERENCE REF ON REF.OBJECT_ID = SPECS.OBJECT_ID " +
+            "WHERE REF.REFERENCE = ?";
+
     void createDoctorSpecialization(DoctorSpecialization specialization);
     void deleteDoctorSpecialization(DoctorSpecialization specialization);
     DoctorSpecialization getDoctorSpecializationById(BigInteger id);
+    DoctorSpecialization getDoctorSpecializationByDoctorDataId(BigInteger id);
     Collection<DoctorSpecialization> getDoctorSpecializationList();
 }
