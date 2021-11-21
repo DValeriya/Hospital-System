@@ -3,7 +3,7 @@ package com.teama.hospitalsystem.dao.impl;
 import com.teama.hospitalsystem.dao.UserDAO;
 import com.teama.hospitalsystem.models.User;
 import com.teama.hospitalsystem.util.UserRole;
-import com.teama.hospitalsystem.util.UserRowMapper;
+import com.teama.hospitalsystem.util.mappers.UserRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

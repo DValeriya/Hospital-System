@@ -1,6 +1,7 @@
-package com.teama.hospitalsystem.util;
+package com.teama.hospitalsystem.util.mappers;
 
 import com.teama.hospitalsystem.models.User;
+import com.teama.hospitalsystem.util.UserRole;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.math.BigInteger;

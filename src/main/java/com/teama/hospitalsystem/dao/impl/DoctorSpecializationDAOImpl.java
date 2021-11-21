@@ -2,8 +2,7 @@ package com.teama.hospitalsystem.dao.impl;
 
 import com.teama.hospitalsystem.dao.DoctorSpecializationDAO;
 import com.teama.hospitalsystem.models.DoctorSpecialization;
-import com.teama.hospitalsystem.util.DoctorSpecializationRowMapper;
-import com.teama.hospitalsystem.util.UserRowMapper;
+import com.teama.hospitalsystem.util.mappers.DoctorSpecializationRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

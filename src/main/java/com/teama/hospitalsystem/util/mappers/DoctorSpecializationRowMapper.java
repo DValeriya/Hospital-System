@@ -1,4 +1,4 @@
-package com.teama.hospitalsystem.util;
+package com.teama.hospitalsystem.util.mappers;
 
 import com.teama.hospitalsystem.models.DoctorSpecialization;
 import org.springframework.jdbc.core.RowMapper;
