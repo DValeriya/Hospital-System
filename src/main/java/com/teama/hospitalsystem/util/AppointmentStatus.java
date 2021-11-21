@@ -5,9 +5,9 @@ import com.teama.hospitalsystem.models.Appointment;
 import java.math.BigInteger;
 
 public enum AppointmentStatus {
-    FREE(BigInteger.valueOf(1)),
-    RESERVED(BigInteger.valueOf(2)),
-    NOTAVAILABLE(BigInteger.valueOf(3));
+    FREE(BigInteger.valueOf(11)),
+    RESERVED(BigInteger.valueOf(12)),
+    NOTAVAILABLE(BigInteger.valueOf(13));
 
     private final BigInteger _id;
     AppointmentStatus(BigInteger id){
