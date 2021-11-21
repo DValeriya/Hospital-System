@@ -1,10 +1,14 @@
 package com.teama.hospitalsystem.models;
 
 import com.teama.hospitalsystem.util.AppointmentStatus;
+import sun.security.pkcs.ParsingException;
 
+import java.io.UncheckedIOException;
 import java.math.BigInteger;
+
 import java.util.Date;
 import java.util.Objects;
+
 
 public class Appointment {
     private BigInteger id;
@@ -19,8 +23,25 @@ public class Appointment {
     private BigInteger nextAppointment;
     private AppointmentStatus status;
     /* Ctor */
+    public Appointment(){};
 
-    public Appointment(){}
+    public Appointment(BigInteger id, Date expectedStart, Date expectedEnd, Date actualStart, Date actualEnd,
+                       BigInteger doctorId, BigInteger patientId, String diagnosis, String referral,
+                       BigInteger nextAppointment, AppointmentStatus status)
+    {
+        this.id = id;
+        this.expectedStart = expectedStart;
+        this.expectedEnd = expectedEnd;
+        this.actualStart = actualStart;
+        this.actualEnd = actualEnd;
+        this.doctorId = doctorId;
+        this.patientId = patientId;
+        this.diagnosis = diagnosis;
+        this.referral = referral;
+        this.nextAppointment = nextAppointment;
+        this.status = status;
+    }
+
 
     /* Setters */
 
@@ -151,5 +172,83 @@ public class Appointment {
     @Override
     public int hashCode() {
         return Objects.hash(id, expectedStart, expectedEnd, actualStart, actualEnd, doctorId, patientId, diagnosis, referral, nextAppointment, status);
+    }
+
+    /* Builder */
+    public static class Builder{
+        private final BigInteger id;
+        private Date expectedStart;
+        private Date expectedEnd;
+        private Date actualStart;
+        private Date actualEnd;
+        private final BigInteger doctorId;
+        private BigInteger patientId;
+        private String diagnosis;
+        private String referral;
+        private BigInteger nextAppointment;
+        private AppointmentStatus status;
+        public Builder(BigInteger id, Date expectedStart, Date expectedEnd, Date actualStart, Date actualEnd,
+                       BigInteger doctorId, BigInteger patientId, String diagnosis, String referral,
+                       BigInteger nextAppointment, AppointmentStatus status){
+            this.id = id;
+            this.expectedStart = expectedStart;
+            this.expectedEnd = expectedEnd;
+            this.actualStart = actualStart;
+            this.actualEnd = actualEnd;
+            this.doctorId = doctorId;
+            this.patientId = patientId;
+            this.diagnosis = diagnosis;
+            this.referral = referral;
+            this.nextAppointment = nextAppointment;
+            this.status = status;
+        }
+        public Builder(BigInteger id, Date expectedStart, Date expectedEnd, BigInteger doctorId, AppointmentStatus status){
+            this.id = id;
+            this.expectedStart = expectedStart;
+            this.expectedEnd = expectedEnd;
+            this.doctorId = doctorId;
+            this.status = status;
+        }
+        public Builder withActualStart(Date actualStart){
+            this.actualStart = actualStart;
+            return this;
+        }
+        public Builder withActualEnd(Date actualEnd){
+            this.actualEnd = actualEnd;
+            return this;
+        }
+        public Builder withPatientId(BigInteger patientId){
+            this.patientId = patientId;
+            return this;
+        }
+        public Builder withDiagnosis(String diagnosis){
+            this.diagnosis = diagnosis;
+            return this;
+        }
+        public Builder withReferral(String referral){
+            this.referral = referral;
+            return this;
+        }
+        public Builder withNextAppointment(BigInteger nextAppointment){
+            this.nextAppointment = nextAppointment;
+            return this;
+        }
+        public Appointment build(){
+            return new Appointment(this);
+        }
+
+    }
+    private Appointment(Builder builder){
+        this.id = builder.id;
+        this.expectedStart = builder.expectedStart;
+        this.expectedEnd = builder.expectedEnd;
+        this.actualStart = builder.actualStart;
+        this.actualEnd = builder.actualEnd;
+        this.doctorId = builder.doctorId;
+        this.patientId = builder.patientId;
+        this.diagnosis = builder.diagnosis;
+        this.referral = builder.referral;
+        this.nextAppointment = builder.nextAppointment;
+        this.status = builder.status;
     }
 }
