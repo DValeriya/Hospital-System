@@ -1,8 +1,10 @@
 package com.teama.hospitalsystem.models;
 
+import java.math.BigInteger;
 import java.sql.Time;
 
 public class GeneralInformation {
+    private BigInteger generalInformationId;
     private String address;
     private String phone;
     private Time workingStart;
@@ -10,7 +12,8 @@ public class GeneralInformation {
 
     public GeneralInformation() {}
 
-    public GeneralInformation (String address, String phone, Time workingStart, Time workingEnd) {
+    public GeneralInformation (BigInteger generalInformationId, String address, String phone, Time workingStart, Time workingEnd) {
+        this.generalInformationId = generalInformationId;
         this.address = address;
         this.phone = phone;
         this.workingStart = workingStart;
@@ -19,6 +22,10 @@ public class GeneralInformation {
 
     public String getAddress() {
         return address;
+    }
+
+    public BigInteger getGeneralInformationId() {
+        return generalInformationId;
     }
 
     public void setAddress(String address) {
