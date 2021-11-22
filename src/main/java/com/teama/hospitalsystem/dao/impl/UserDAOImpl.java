@@ -30,12 +30,29 @@ public class UserDAOImpl implements UserDAO {
                 .withProcedureName(CREATE_USER_PROCEDURE_NAME);
 
         Map<String, Object> inParamMap = new HashMap<>();
-        inParamMap.put("NAME", user.getName());
+        inParamMap.put("USER_NAME", user.getName());
         inParamMap.put("PASSWORD", user.getPassword());
         inParamMap.put("PHONENUMBER", user.getPhoneNumber());
         inParamMap.put("BIRTHDATE", user.getBirthDate());
         inParamMap.put("EMAIL", user.getEmail());
         inParamMap.put("ROLE", user.getRole().getId());
+        SqlParameterSource in = new MapSqlParameterSource(inParamMap);
+
+        jdbcCall.execute(in);
+    }
+
+    @Override
+    public void editUser(User user) throws DataAccessException {
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName(EDIT_USER_PROCEDURE_NAME);
+
+        Map<String, Object> inParamMap = new HashMap<>();
+        inParamMap.put("USER_ID", user.getId());
+        inParamMap.put("USER_NAME", user.getName());
+        inParamMap.put("PASSWORD", user.getPassword());
+        inParamMap.put("PHONENUMBER", user.getPhoneNumber());
+        inParamMap.put("BIRTHDATE", user.getBirthDate());
+        inParamMap.put("EMAIL", user.getEmail());
         SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
         jdbcCall.execute(in);
