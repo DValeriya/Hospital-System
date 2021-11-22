@@ -9,13 +9,13 @@ public enum AppointmentStatus {
     RESERVED(BigInteger.valueOf(12)),
     NOTAVAILABLE(BigInteger.valueOf(13));
 
-    private final BigInteger _id;
+    private final BigInteger id;
     AppointmentStatus(BigInteger id){
-        _id = id;
+        this.id = id;
     }
 
     public BigInteger getId() {
-        return _id;
+        return this.id;
     }
 
     public static AppointmentStatus fromId(BigInteger id) throws IllegalArgumentException {
