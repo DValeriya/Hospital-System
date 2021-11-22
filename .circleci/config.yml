@@ -1,0 +1,12 @@
+version: 2.1
+
+orbs:
+  heroku: circleci/heroku@1.2.6
+
+workflows:
+  heroku-deploy:
+    jobs:
+      - heroku/deploy-via-git:
+          branch: CIRCLE_BRANCHE
+          app-name: HEROKU_APP_NAME
+          api-key: HEROKU_API_KEY
