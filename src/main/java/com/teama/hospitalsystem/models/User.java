@@ -82,7 +82,7 @@ public class User {
     }
 
     public static class Builder {
-        private String email = "";
+        private String email = null;
         private Date birthDate = null;
         private EmployerData employerData;
         private BigInteger id;

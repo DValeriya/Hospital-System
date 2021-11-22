@@ -10,15 +10,14 @@ import java.util.Collection;
 
 public interface UserDAO {
     String CREATE_USER_PROCEDURE_NAME = "CREATE_USER";
+    String EDIT_USER_PROCEDURE_NAME = "EDIT_USER";
 
-    String SELECT_USERS = "SELECT USERS.OBJECT_ID AS id, LOGIN.VALUE AS login, NAME.VALUE AS name, " +
-            "PHONENUMBER.VALUE AS phone, NVL(EMAIL.VALUE, NULL) AS email, NVL(BIRTHDATE.DATE_VALUE, NULL) AS birth, " +
+    String SELECT_USERS = "SELECT USERS.OBJECT_ID AS id, LOGIN.VALUE AS login, USERS.NAME AS name, " +
+            "PHONENUMBER.VALUE AS phone, EMAIL.VALUE AS email, BIRTHDATE.DATE_VALUE AS birth, " +
             "ROLE.LIST_VALUE_ID AS role " +
             "FROM OBJECTS USERS " +
             "LEFT JOIN ATTRIBUTES LOGIN ON LOGIN.OBJECT_ID = USERS.OBJECT_ID " +
             " AND LOGIN.ATTR_ID = " + EAVAttrTypesID.LOGIN +
-            " LEFT JOIN ATTRIBUTES NAME ON NAME.OBJECT_ID = USERS.OBJECT_ID " +
-            " AND NAME.ATTR_ID = " + EAVAttrTypesID.NAME +
             " LEFT JOIN ATTRIBUTES PHONENUMBER ON PHONENUMBER.OBJECT_ID = USERS.OBJECT_ID " +
             " AND PHONENUMBER.ATTR_ID = " + EAVAttrTypesID.PHONE_NUMBER +
             " LEFT JOIN ATTRIBUTES BIRTHDATE ON BIRTHDATE.OBJECT_ID = USERS.OBJECT_ID " +
@@ -40,6 +39,7 @@ public interface UserDAO {
             " AND ROLE.LIST_VALUE_ID = ?";
 
     void createUser(User user);
+    void editUser(User user);
     User getUserByLoginAndPassword(BigInteger login, String password);
     User getUserById(BigInteger id);
     Collection<User> getUsersList();
