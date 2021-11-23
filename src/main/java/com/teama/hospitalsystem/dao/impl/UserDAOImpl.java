@@ -3,9 +3,9 @@ package com.teama.hospitalsystem.dao.impl;
 import com.teama.hospitalsystem.dao.UserDAO;
 import com.teama.hospitalsystem.models.User;
 import com.teama.hospitalsystem.util.UserRole;
-import com.teama.hospitalsystem.util.mappers.UserRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -19,6 +19,17 @@ import java.util.Map;
 @Repository
 public class UserDAOImpl implements UserDAO {
     private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<User> rowMapper = (rs, rowNum) -> {
+        BigInteger id = rs.getBigDecimal("id").toBigInteger();
+        BigInteger login = rs.getBigDecimal("login").toBigInteger();
+        BigInteger role = rs.getBigDecimal("role").toBigInteger();
+        return new User.Builder(id, login, rs.getString("name"),
+                rs.getString("phone"), UserRole.fromId(role))
+                .withBirthDate(rs.getDate("birth"))
+                .withEmail(rs.getString("email"))
+                .build();
+    };
 
     public UserDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -60,22 +71,21 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUserByLoginAndPassword(BigInteger login, String password) throws DataAccessException {
-        return jdbcTemplate.queryForObject(SELECT_USER_BY_LOGIN_AND_PASSWORD,
-                new UserRowMapper(), login, password);
+        return jdbcTemplate.queryForObject(SELECT_USER_BY_LOGIN_AND_PASSWORD, rowMapper, login, password);
     }
 
     @Override
     public User getUserById(BigInteger id) throws DataAccessException {
-        return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, new UserRowMapper(), id);
+        return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, rowMapper, id);
     }
 
     @Override
     public Collection<User> getUsersList() throws DataAccessException {
-        return jdbcTemplate.query(SELECT_USERS, new UserRowMapper());
+        return jdbcTemplate.query(SELECT_USERS, rowMapper);
     }
 
     @Override
     public Collection<User> getUsersListByRole(UserRole role) throws DataAccessException {
-        return jdbcTemplate.query(SELECT_USERS_BY_ROLE, new UserRowMapper(), role.getId());
+        return jdbcTemplate.query(SELECT_USERS_BY_ROLE, rowMapper, role.getId());
     }
 }
