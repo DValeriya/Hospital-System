@@ -19,8 +19,8 @@ public interface DoctorSpecializationDAO {
 
     String SELECT_DOCTOR_SPEC_BY_DOC_DATA_ID = "SELECT SPECS.OBJECT_ID AS id, SPECS.NAME AS title " +
             "FROM OBJECTS SPECS " +
-            "LEFT JOIN OBJREFERENCE REF ON REF.OBJECT_ID = SPECS.OBJECT_ID " +
-            "WHERE REF.REFERENCE = ?";
+            "LEFT JOIN OBJREFERENCE REF ON REF.REFERENCE = SPECS.OBJECT_ID " +
+            "WHERE REF.OBJECT_ID = ?";
 
     void createDoctorSpecialization(DoctorSpecialization specialization);
     void deleteDoctorSpecialization(DoctorSpecialization specialization);
