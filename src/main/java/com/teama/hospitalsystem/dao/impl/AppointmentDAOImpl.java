@@ -1,12 +1,10 @@
 package com.teama.hospitalsystem.dao.impl;
 
 import com.teama.hospitalsystem.dao.AppointmentDAO;
-import com.teama.hospitalsystem.util.mappers.AppointmentMapper;
 import com.teama.hospitalsystem.models.Appointment;
 import com.teama.hospitalsystem.models.WorkDay;
 import com.teama.hospitalsystem.util.AppointmentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,32 +12,27 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.math.BigInteger;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.Month;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Repository
 public class AppointmentDAOImpl implements AppointmentDAO {
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-    private Logger log = Logger.getLogger(AppointmentDAOImpl.class.getName());
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public AppointmentDAOImpl(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     private final RowMapper<Appointment> rowMapper = (rs, rowNum) -> {
         BigInteger id = BigInteger.valueOf(rs.getLong("ID"));
         BigInteger doctorId = BigInteger.valueOf(rs.getLong("DOCTORID"));
-        BigInteger patientId = BigInteger.valueOf(rs.getLong("PATIENTID"));
         return new Appointment.Builder(id, rs.getTimestamp("EXPSTART"), rs.getTimestamp("EXPEND"), doctorId,
                 AppointmentStatus.fromId(BigInteger.valueOf(rs.getInt("STATUS"))))
-                .withActualEnd(rs.getDate("ACTEND"))
-                .withActualStart(rs.getDate("ACTSTART"))
+                .withActualEnd(rs.getTimestamp("ACTEND"))
+                .withActualStart(rs.getTimestamp("ACTSTART"))
                 .withPatientId(BigInteger.valueOf(rs.getLong("PATIENTID")))
                 .withDiagnosis(rs.getString("DIAGNOSIS"))
                 .withReferral(rs.getString("REFERRAL"))
@@ -72,39 +65,39 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
     @Override
     public Appointment getAppointmentById(BigInteger id) {
-        return jdbcTemplate.queryForObject(sqlGetById, rowMapper, id);
+        return jdbcTemplate.queryForObject(SQL_GET_BY_ID, rowMapper, id);
     }
 
     @Override
     public Collection<Appointment> getAppointmentByDoctorId(BigInteger doctorId) {
-        return jdbcTemplate.query(sqlGetByDoctorId, rowMapper, doctorId);
+        return jdbcTemplate.query(SQL_GET_BY_DOCTOR_ID, rowMapper, doctorId);
     }
 
     @Override
     public Collection<Appointment> getAppointmentByDoctorIdForADay(BigInteger doctorId, WorkDay day) {
-        return jdbcTemplate.query(sqlGetByDoctorIdAndDay, rowMapper, doctorId,
+        return jdbcTemplate.query(SQL_GET_BY_DOCTOR_ID_AND_DAY, rowMapper, doctorId,
                         sdf.format(day.getDate()) + '*');
     }
 
     @Override
     public Collection<Appointment> getAppointmentByDoctorIdForAMonth(BigInteger doctorId, int month, int year) {
-        return jdbcTemplate.query(sqlGetByDoctorIdAndDay, rowMapper, doctorId, String.format("[1-31]-%s-%s*", month, year));
+        return jdbcTemplate.query(SQL_GET_BY_DOCTOR_ID_AND_DAY, rowMapper, doctorId, String.format("[1-31]-%s-%s*", month, year));
     }
 
     @Override
     public Collection<Appointment> getAppointmentByPatientId(BigInteger patientId) {
-        return jdbcTemplate.query(sqlGetByPatientId, rowMapper, patientId);
+        return jdbcTemplate.query(SQL_GET_BY_PATIENT_ID, rowMapper, patientId);
     }
 
     @Override
     public Collection<Appointment> getAppointmentByPatientIdForADate(BigInteger patientId, Date date) {
-        return jdbcTemplate.query(sqlGetByPatientIdForDay, rowMapper, patientId,
+        return jdbcTemplate.query(SQL_GET_BY_PATIENT_ID_AND_DATE, rowMapper, patientId,
                         sdf.format(date) + '*');
     }
 
     @Override
     public void changeAppointmentStatus(BigInteger appointmentId, AppointmentStatus status) {
-        jdbcTemplate.update(sqlChangeAppointmentStatus, status.getId(), appointmentId);
+        jdbcTemplate.update(SQL_CHANGE_APPOINTMENT_STATUS, status.getId(), appointmentId);
     }
 
     @Override
@@ -117,13 +110,11 @@ public class AppointmentDAOImpl implements AppointmentDAO {
 
     @Override
     public void startAppointment(BigInteger appointmentId) {
-        Date c = new Date();
-        jdbcTemplate.update(sqlAppointmentManipulation, 21, appointmentId, sdf.format(c));
+        jdbcTemplate.update(SQL_APPOINTMENT_MANIPULATION, 21, appointmentId, Calendar.getInstance().getTime());
     }
 
     @Override
     public void endAppointment(BigInteger appointmentId) {
-        Date c = new Date();
-        jdbcTemplate.update(sqlAppointmentManipulation, 22, appointmentId, Calendar.getInstance().getTime());
+        jdbcTemplate.update(SQL_APPOINTMENT_MANIPULATION, 22, appointmentId, Calendar.getInstance().getTime());
     }
 }
