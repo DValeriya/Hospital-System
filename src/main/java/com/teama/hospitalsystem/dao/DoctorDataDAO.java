@@ -2,8 +2,10 @@ package com.teama.hospitalsystem.dao;
 
 import com.teama.hospitalsystem.models.DoctorData;
 import com.teama.hospitalsystem.util.EAVAttrTypesID;
+import com.teama.hospitalsystem.util.EAVObjTypesID;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public interface DoctorDataDAO {
     String UPDATE_DOCTORDATA_PROCEDURE = "UPDATE_DOCTORDATA";
@@ -30,8 +32,20 @@ public interface DoctorDataDAO {
             " AND SPECIALIZATION.ATTR_ID = " + EAVAttrTypesID.SPEC +
             " AND SPECIALIZATION.OBJECT_ID = DOCTORDATA.OBJECT_ID";
 
+    String SQL_GET_DOCTOR_LIST_BY_SPECIALIZATION = "SELECT DISTINCT DOCTORDATA.OBJECT_ID DOCTORDATA_ID, " +
+            " APPOINTMENTDURATION.VALUE APPOINTMENT_DURATION, " +
+            " SPECIALIZATION.REFERENCE SECIALIZATION_ID" +
+            " FROM OBJECTS DOCTORDATA, ATTRIBUTES APPOINTMENTDURATION, " +
+            " OBJREFERENCE SPECIALIZATION " +
+            " WHERE DOCTORDATA.OBJECT_TYPE_ID = " + EAVObjTypesID.DOCTOR_DATA +
+            " AND APPOINTMENTDURATION.ATTR_ID = " + EAVAttrTypesID.APPOINTMENT_DURATION +
+            " AND APPOINTMENTDURATION.OBJECT_ID = DOCTORDATA.OBJECT_ID " +
+            " AND SPECIALIZATION.ATTR_ID = " + EAVAttrTypesID.SPEC +
+            " AND SPECIALIZATION.reference = ?";
+
     public void createDoctorData(DoctorData doctorData, BigInteger employerId);
     public void editDoctorData(DoctorData doctorData);
     public DoctorData getDoctorDataByDoctorId(BigInteger id);
     public DoctorData getDoctorDataId(BigInteger id);
+    public List<DoctorData> getDoctorListBySpecialization(BigInteger specializationId);
 }

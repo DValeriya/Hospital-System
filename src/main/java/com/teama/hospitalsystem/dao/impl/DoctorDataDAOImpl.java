@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.sql.ResultSet;
+import java.util.List;
 
 @Repository
 public class DoctorDataDAOImpl implements DoctorDataDAO {
@@ -64,5 +65,10 @@ public class DoctorDataDAOImpl implements DoctorDataDAO {
     @Override
     public DoctorData getDoctorDataId(BigInteger id) throws DataAccessException {
         return jdbcTemplate.queryForObject(SQL_GET_DOCTORDATA_ID, mapRow, id);
+    }
+
+    @Override
+    public List<DoctorData> getDoctorListBySpecialization(BigInteger specializationId) {
+        return jdbcTemplate.query(SQL_GET_DOCTOR_LIST_BY_SPECIALIZATION, mapRow, specializationId);
     }
 }
