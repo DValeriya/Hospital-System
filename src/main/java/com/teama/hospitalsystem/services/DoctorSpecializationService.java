@@ -11,5 +11,4 @@ public interface DoctorSpecializationService {
     void deleteDoctorSpecialization(DoctorSpecialization spec);
     DoctorSpecialization getDoctorSpecializationById(BigInteger id);
     Collection<DoctorSpecialization> getDoctorSpecializationList();
-    boolean isDoctorSpecializationUsed();
 }

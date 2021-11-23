@@ -44,10 +44,4 @@ public class DoctorSpecializationServiceImpl implements DoctorSpecializationServ
     public Collection<DoctorSpecialization> getDoctorSpecializationList() throws DataAccessException {
         return dao.getDoctorSpecializationList();
     }
-
-    @Override
-    public boolean isDoctorSpecializationUsed() {
-        // TODO: Need to be implemented
-        return false;
-    }
 }
