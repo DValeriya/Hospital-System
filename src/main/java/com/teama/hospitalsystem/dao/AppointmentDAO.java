@@ -6,15 +6,13 @@ import com.teama.hospitalsystem.util.AppointmentStatus;
 
 import java.math.BigInteger;
 import java.sql.SQLException;
-import java.time.Month;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 public interface AppointmentDAO {
 
-    String sqlGetById =
+    String SQL_GET_BY_ID =
             "SELECT APPOINTMENT.OBJECT_ID AS ID, EXPECTEDSTART.DATE_VALUE AS EXPSTART, EXPECTEDEND.DATE_VALUE AS EXPEND,\n" +
                     "       ACTUALSTART.DATE_VALUE AS ACTSTART, ACTUALEND.DATE_VALUE AS ACTEND, DOCTORID.OBJECT_ID AS DOCTORID,\n" +
                     "       PATIENTID.OBJECT_ID AS PATIENTID, DIAGNOSIS.VALUE AS DIAGNOSIS, REFERRAL.VALUE AS REFERRAL,\n" +
@@ -31,7 +29,7 @@ public interface AppointmentDAO {
                     "    LEFT JOIN ATTRIBUTES STATUS ON STATUS.ATTR_ID = 28 AND STATUS.OBJECT_ID = APPOINTMENT.OBJECT_ID\n" +
                     "WHERE APPOINTMENT.OBJECT_ID = ? AND OBJECT_TYPE_ID = 5";
 
-    String sqlGetList =
+    String SQL_GET_LIST =
             "WITH OBJ AS (\n" +
                     "    SELECT OBJECT_ID FROM OBJECTS WHERE OBJECT_TYPE_ID = 5\n" +
                     ")\n" +
@@ -51,16 +49,16 @@ public interface AppointmentDAO {
                     "    LEFT JOIN ATTRIBUTES STATUS ON STATUS.ATTR_ID = 28 AND STATUS.OBJECT_ID = APPOINTMENT.OBJECT_ID\n" +
                     "WHERE APPOINTMENT.OBJECT_ID = APPOINTMENT.OBJECT_ID";
 
-    String sqlGetByDoctorId = sqlGetList + " AND DOCTORID.OBJECT_ID = ?";
+    String SQL_GET_BY_DOCTOR_ID = SQL_GET_LIST + " AND DOCTORID.OBJECT_ID = ?";
 
-    String sqlGetByDoctorIdAndDay = sqlGetByDoctorId + "AND regexp_like(EXPECTEDSTART.DATE_VALUE, '?')";
+    String SQL_GET_BY_DOCTOR_ID_AND_DAY = SQL_GET_BY_DOCTOR_ID + "AND regexp_like(EXPECTEDSTART.DATE_VALUE, '?')";
 
-    String sqlGetByPatientId = sqlGetList + "AND PATIENT.OBJECT_ID = ?";
+    String SQL_GET_BY_PATIENT_ID = SQL_GET_LIST + "AND PATIENT.OBJECT_ID = ?";
 
-    String sqlGetByPatientIdForDay = sqlGetByPatientId + "AND regexp_like(EXPECTEDSTART.DATE_VALUE, '?')";
+    String SQL_GET_BY_PATIENT_ID_AND_DATE = SQL_GET_BY_PATIENT_ID + "AND regexp_like(EXPECTEDSTART.DATE_VALUE, '?')";
 
-    String sqlAppointmentManipulation = "INSERT INTO ATTRIBUTES(ATTR_ID, OBJECT_ID, DATE_VALUE) VALUES (?, ?, ?)";
-    String sqlChangeAppointmentStatus = "UPDATE ATTRIBUTES SET LIST_VALUE_ID = ? WHERE OBJECT_ID = ? AND ATTR_ID = 28";
+    String SQL_APPOINTMENT_MANIPULATION = "INSERT INTO ATTRIBUTES(ATTR_ID, OBJECT_ID, DATE_VALUE) VALUES (?, ?, ?)";
+    String SQL_CHANGE_APPOINTMENT_STATUS = "UPDATE ATTRIBUTES SET LIST_VALUE_ID = ? WHERE OBJECT_ID = ? AND ATTR_ID = 28";
 
     void createAppointment(Appointment appointment) throws SQLException;
 
