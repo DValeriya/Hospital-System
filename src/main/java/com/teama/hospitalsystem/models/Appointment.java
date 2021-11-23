@@ -1,9 +1,6 @@
 package com.teama.hospitalsystem.models;
 
 import com.teama.hospitalsystem.util.AppointmentStatus;
-import sun.security.pkcs.ParsingException;
-
-import java.io.UncheckedIOException;
 import java.math.BigInteger;
 
 import java.util.Date;
@@ -23,7 +20,6 @@ public class Appointment {
     private BigInteger nextAppointment;
     private AppointmentStatus status;
     /* Ctor */
-    public Appointment(){};
 
     public Appointment(BigInteger id, Date expectedStart, Date expectedEnd, Date actualStart, Date actualEnd,
                        BigInteger doctorId, BigInteger patientId, String diagnosis, String referral,
@@ -177,8 +173,8 @@ public class Appointment {
     /* Builder */
     public static class Builder{
         private final BigInteger id;
-        private Date expectedStart;
-        private Date expectedEnd;
+        private final Date expectedStart;
+        private final Date expectedEnd;
         private Date actualStart;
         private Date actualEnd;
         private final BigInteger doctorId;
