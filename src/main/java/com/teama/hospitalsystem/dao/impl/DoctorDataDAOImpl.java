@@ -2,48 +2,46 @@ package com.teama.hospitalsystem.dao.impl;
 
 import com.teama.hospitalsystem.dao.DoctorDataDAO;
 import com.teama.hospitalsystem.models.DoctorData;
-import com.teama.hospitalsystem.util.mappers.DoctorDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
 import java.math.BigInteger;
-import java.util.UUID;
+import java.sql.ResultSet;
 
 @Repository
 public class DoctorDataDAOImpl implements DoctorDataDAO {
-    private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcCall updateJdbcCall;
-    private SimpleJdbcCall insertJdbcCall;
-    private DoctorDataMapper doctorDataMapper;
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcCall updateJdbcCall;
+    private final SimpleJdbcCall insertJdbcCall;
+
+    public final RowMapper<DoctorData> mapRow = (ResultSet rs, int rowNum) -> {
+        DoctorData doctorData = new DoctorData();
+        doctorData.setDoctorDataId(BigInteger.valueOf(rs.getLong("DOCTORDATA_ID")));
+        doctorData.setAppointmentDuration(rs.getTime("APPOINTMENT_DURATION"));
+        return doctorData;
+    };
 
     @Autowired
-    public void setDoctorDataMapper(DoctorDataMapper doctorDataMapper) {
-        this.doctorDataMapper = doctorDataMapper;
-    }
-
-    @Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.updateJdbcCall = new SimpleJdbcCall(dataSource)
+    public DoctorDataDAOImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.updateJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName(UPDATE_DOCTORDATA_PROCEDURE);
-        this.insertJdbcCall = new SimpleJdbcCall(dataSource)
+        this.insertJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName(CREATE_DOCTORDATA_PROCEDURE);
     }
-
 
     @Override
     public void createDoctorData(DoctorData doctorData, BigInteger employerId) throws DataAccessException {
         SqlParameterSource mapParameters = new MapSqlParameterSource()
                 .addValue("APPOINTMENT_DURATION", doctorData.getAppointmentDuration())
                 .addValue("PARENT", employerId)
-                .addValue("SPECIALIZATION", doctorData.getSpec().getSpecializationId())
-                .addValue("NAME", "doctorData-" + UUID.randomUUID());
+                .addValue("SPECIALIZATION", doctorData.getSpec().getSpecializationId());
 
         this.insertJdbcCall.execute(mapParameters);
     }
@@ -60,11 +58,11 @@ public class DoctorDataDAOImpl implements DoctorDataDAO {
 
     @Override
     public DoctorData getDoctorDataByDoctorId(BigInteger id) throws DataAccessException {
-        return jdbcTemplate.queryForObject(SQL_GET_DOCTORDATA_BY_DOCTOR_ID, doctorDataMapper, id);
+        return jdbcTemplate.queryForObject(SQL_GET_DOCTORDATA_BY_DOCTOR_ID, mapRow, id);
     }
 
     @Override
     public DoctorData getDoctorDataId(BigInteger id) throws DataAccessException {
-        return jdbcTemplate.queryForObject(SQL_GET_DOCTORDATA_ID, doctorDataMapper, id);
+        return jdbcTemplate.queryForObject(SQL_GET_DOCTORDATA_ID, mapRow, id);
     }
 }
