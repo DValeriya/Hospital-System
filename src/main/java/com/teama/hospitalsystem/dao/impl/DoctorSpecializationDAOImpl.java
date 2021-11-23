@@ -2,9 +2,9 @@ package com.teama.hospitalsystem.dao.impl;
 
 import com.teama.hospitalsystem.dao.DoctorSpecializationDAO;
 import com.teama.hospitalsystem.models.DoctorSpecialization;
-import com.teama.hospitalsystem.util.mappers.DoctorSpecializationRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -19,6 +19,12 @@ import java.util.Map;
 public class DoctorSpecializationDAOImpl implements DoctorSpecializationDAO {
 
     private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<DoctorSpecialization> rowMapper = (rs, rowNum) -> {
+        BigInteger id = rs.getBigDecimal("id").toBigInteger();
+        return new DoctorSpecialization(id, rs.getString("title"));
+    };
+
 
     public DoctorSpecializationDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -44,17 +50,16 @@ public class DoctorSpecializationDAOImpl implements DoctorSpecializationDAO {
 
     @Override
     public DoctorSpecialization getDoctorSpecializationById(BigInteger id) throws DataAccessException {
-        return jdbcTemplate.queryForObject(SELECT_DOCTOR_SPEC_BY_ID, new DoctorSpecializationRowMapper(), id);
+        return jdbcTemplate.queryForObject(SELECT_DOCTOR_SPEC_BY_ID, rowMapper, id);
     }
 
     @Override
     public DoctorSpecialization getDoctorSpecializationByDoctorDataId(BigInteger id) throws DataAccessException {
-        return jdbcTemplate.queryForObject(SELECT_DOCTOR_SPEC_BY_DOC_DATA_ID,
-                new DoctorSpecializationRowMapper(), id);
+        return jdbcTemplate.queryForObject(SELECT_DOCTOR_SPEC_BY_DOC_DATA_ID, rowMapper, id);
     }
 
     @Override
     public Collection<DoctorSpecialization> getDoctorSpecializationList() throws DataAccessException {
-            return jdbcTemplate.query(SELECT_DOCTOR_SPECS, new DoctorSpecializationRowMapper());
+            return jdbcTemplate.query(SELECT_DOCTOR_SPECS, rowMapper);
     }
 }
