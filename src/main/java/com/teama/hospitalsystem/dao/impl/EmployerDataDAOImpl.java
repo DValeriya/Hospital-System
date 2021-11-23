@@ -81,7 +81,6 @@ public class EmployerDataDAOImpl implements EmployerDataDAO {
 
     @Override
     public BigInteger getEmployerDataId(BigInteger userId) {
-        Integer id = jdbcTemplate.queryForObject(GET_EMP_DATA_ID_BY_USER_ID, Integer.class, userId);
-        return BigInteger.valueOf(id);
+        return jdbcTemplate.queryForObject(GET_EMP_DATA_ID_BY_USER_ID, BigInteger.class, userId);
     }
 }
