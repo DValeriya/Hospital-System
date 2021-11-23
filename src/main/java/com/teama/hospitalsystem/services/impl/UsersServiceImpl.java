@@ -1,7 +1,7 @@
 package com.teama.hospitalsystem.services.impl;
 
 import com.teama.hospitalsystem.dao.UserDAO;
-import com.teama.hospitalsystem.exceptions.UserNotFoundException;
+import com.teama.hospitalsystem.exceptions.EntityNotFoundException;
 import com.teama.hospitalsystem.models.User;
 import com.teama.hospitalsystem.services.UsersService;
 import com.teama.hospitalsystem.util.UserRole;
@@ -32,20 +32,21 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public User getUserByLoginAndPassword(BigInteger login, String password) throws DataAccessException {
+    public User getUserByLoginAndPassword(BigInteger login, String password)
+            throws DataAccessException, EntityNotFoundException {
         try {
             return dao.getUserByLoginAndPassword(login, password);
         } catch (EmptyResultDataAccessException ex) {
-            throw new UserNotFoundException();
+            throw new EntityNotFoundException();
         }
     }
 
     @Override
-    public User getUserById(BigInteger id) throws DataAccessException {
+    public User getUserById(BigInteger id) throws DataAccessException, EntityNotFoundException {
         try {
             return dao.getUserById(id);
         } catch (EmptyResultDataAccessException ex) {
-            throw new UserNotFoundException();
+            throw new EntityNotFoundException();
         }
     }
 
