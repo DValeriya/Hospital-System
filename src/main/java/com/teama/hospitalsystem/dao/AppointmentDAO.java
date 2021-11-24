@@ -60,7 +60,7 @@ public interface AppointmentDAO {
     String SQL_APPOINTMENT_MANIPULATION = "INSERT INTO ATTRIBUTES(ATTR_ID, OBJECT_ID, DATE_VALUE) VALUES (?, ?, ?)";
     String SQL_CHANGE_APPOINTMENT_STATUS = "UPDATE ATTRIBUTES SET LIST_VALUE_ID = ? WHERE OBJECT_ID = ? AND ATTR_ID = 28";
 
-    void createAppointment(Appointment appointment) throws SQLException;
+    void createAppointment(Appointment appointment);
 
     Appointment getAppointmentById(BigInteger id);
 

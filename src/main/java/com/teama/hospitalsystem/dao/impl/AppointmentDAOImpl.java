@@ -5,6 +5,7 @@ import com.teama.hospitalsystem.models.Appointment;
 import com.teama.hospitalsystem.models.WorkDay;
 import com.teama.hospitalsystem.util.AppointmentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -41,7 +42,7 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     };
 
     @Override
-    public void createAppointment(Appointment appointment){
+    public void createAppointment(Appointment appointment) throws DataAccessException {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName("Create_Appointment");
         Map<String, Object> params = new HashMap<>();
@@ -64,44 +65,44 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     }
 
     @Override
-    public Appointment getAppointmentById(BigInteger id) {
+    public Appointment getAppointmentById(BigInteger id) throws DataAccessException {
         return jdbcTemplate.queryForObject(SQL_GET_BY_ID, rowMapper, id);
     }
 
     @Override
-    public Collection<Appointment> getAppointmentByDoctorId(BigInteger doctorId) {
+    public Collection<Appointment> getAppointmentByDoctorId(BigInteger doctorId) throws DataAccessException {
         return jdbcTemplate.query(SQL_GET_BY_DOCTOR_ID, rowMapper, doctorId);
     }
 
     @Override
-    public Collection<Appointment> getAppointmentByDoctorIdForADay(BigInteger doctorId, WorkDay day) {
+    public Collection<Appointment> getAppointmentByDoctorIdForADay(BigInteger doctorId, WorkDay day) throws DataAccessException {
         return jdbcTemplate.query(SQL_GET_BY_DOCTOR_ID_AND_DAY, rowMapper, doctorId,
                         sdf.format(day.getDate()) + '*');
     }
 
     @Override
-    public Collection<Appointment> getAppointmentByDoctorIdForAMonth(BigInteger doctorId, int month, int year) {
+    public Collection<Appointment> getAppointmentByDoctorIdForAMonth(BigInteger doctorId, int month, int year) throws DataAccessException {
         return jdbcTemplate.query(SQL_GET_BY_DOCTOR_ID_AND_DAY, rowMapper, doctorId, String.format("[1-31]-%s-%s*", month, year));
     }
 
     @Override
-    public Collection<Appointment> getAppointmentByPatientId(BigInteger patientId) {
+    public Collection<Appointment> getAppointmentByPatientId(BigInteger patientId) throws DataAccessException {
         return jdbcTemplate.query(SQL_GET_BY_PATIENT_ID, rowMapper, patientId);
     }
 
     @Override
-    public Collection<Appointment> getAppointmentByPatientIdForADate(BigInteger patientId, Date date) {
+    public Collection<Appointment> getAppointmentByPatientIdForADate(BigInteger patientId, Date date) throws DataAccessException {
         return jdbcTemplate.query(SQL_GET_BY_PATIENT_ID_AND_DATE, rowMapper, patientId,
                         sdf.format(date) + '*');
     }
 
     @Override
-    public void changeAppointmentStatus(BigInteger appointmentId, AppointmentStatus status) {
+    public void changeAppointmentStatus(BigInteger appointmentId, AppointmentStatus status) throws DataAccessException {
         jdbcTemplate.update(SQL_CHANGE_APPOINTMENT_STATUS, status.getId(), appointmentId);
     }
 
     @Override
-    public void editAppointment(Map<String, Object> params) {
+    public void editAppointment(Map<String, Object> params) throws DataAccessException {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName("Update_Appointment");
         SqlParameterSource in = new MapSqlParameterSource(params);
