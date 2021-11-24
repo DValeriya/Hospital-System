@@ -7,6 +7,7 @@ workflows:
   heroku-deploy:
     jobs:
       - heroku/deploy-via-git:
+          force: true
           branch: master
           app-name: hospital-system-app
           api-key: HEROKU_API_KEY
