@@ -32,7 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void notifyUserByEmailAboutAppointment(BigInteger id) {
         ClassPathResource resource = new ClassPathResource("templates/greetings_template.html");
         try {
-            sentMail(resource, "lotuszadrotus1@gmail.com", "Registration");
+            sentMail(resource, userDAO.getUserById(id).getEmail(), "Registration");
         }catch (MessagingException ex){
             log.log(Level.WARNING, ex.getMessage() + ex.toString());
         }
@@ -42,7 +42,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void notifyUserByEmailAboutRegistration(BigInteger id) {
         ClassPathResource resource = new ClassPathResource("templates/notification_template.html");
         try {
-            sentMail(resource, "lotuszadrotus1@gmail.com", "Notification about Appointment");
+            sentMail(resource, userDAO.getUserById(id).getEmail(), "Notification about Appointment");
         }catch (MessagingException ex){
             log.log(Level.WARNING, ex.getMessage() + ex.toString());
         }
