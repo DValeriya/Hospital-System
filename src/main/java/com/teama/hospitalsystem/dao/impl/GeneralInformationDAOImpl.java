@@ -1,7 +1,10 @@
 package com.teama.hospitalsystem.dao.impl;
 
 import com.teama.hospitalsystem.dao.GeneralInformationDAO;
+import com.teama.hospitalsystem.exceptions.DAOException;
 import com.teama.hospitalsystem.models.GeneralInformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +22,7 @@ public class GeneralInformationDAOImpl implements GeneralInformationDAO {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcCall updateJdbcCall;
     private final SimpleJdbcCall insertJdbcCall;
+    private static final Logger LOGGER = LoggerFactory.getLogger(GeneralInformationDAOImpl.class);
 
     public RowMapper<GeneralInformation> mapRow = (ResultSet rs, int rowNum) -> {
         return new GeneralInformation(
@@ -40,29 +44,45 @@ public class GeneralInformationDAOImpl implements GeneralInformationDAO {
 
     @Override
     public void editGeneralInformation(GeneralInformation generalInformation) throws DataAccessException {
-        SqlParameterSource mapParameters = new MapSqlParameterSource()
-                .addValue("GEN_OBJECT_ID", generalInformation.getGeneralInformationId())
-                .addValue("GEN_ADDRESS", generalInformation.getAddress())
-                .addValue("GEN_PHONE", generalInformation.getPhone())
-                .addValue("GEN_WORKING_START", generalInformation.getWorkingStart())
-                .addValue("GEN_WORKING_END", generalInformation.getWorkingEnd());
+        try {
+            SqlParameterSource mapParameters = new MapSqlParameterSource()
+                    .addValue("GEN_OBJECT_ID", generalInformation.getGeneralInformationId())
+                    .addValue("GEN_ADDRESS", generalInformation.getAddress())
+                    .addValue("GEN_PHONE", generalInformation.getPhone())
+                    .addValue("GEN_WORKING_START", generalInformation.getWorkingStart())
+                    .addValue("GEN_WORKING_END", generalInformation.getWorkingEnd());
 
-        this.updateJdbcCall.execute(mapParameters);
+            this.updateJdbcCall.execute(mapParameters);
+        } catch (DataAccessException dataAccessException) {
+            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
+            throw new DAOException("GeneralInformationDAOImpl error. GeneralInformation was not edited");
+        }
     }
 
     @Override
     public GeneralInformation getGeneralInformation(BigInteger id) throws DataAccessException {
-        return jdbcTemplate.queryForObject(SQL_GET_GENERALINFO, mapRow, id);
+        try {
+            return jdbcTemplate.queryForObject(SQL_GET_GENERALINFO, mapRow, id);
+        } catch (DataAccessException dataAccessException) {
+            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
+            throw new DAOException("GeneralInformationDAOImpl error. GeneralInformation Failed to get a information by ID");
+        }
+
     }
 
     @Override
     public void createGeneralInformation(GeneralInformation generalInformation) throws DataAccessException {
-        SqlParameterSource mapParameters = new MapSqlParameterSource()
-                .addValue("GEN_ADDRESS", generalInformation.getAddress())
-                .addValue("GEN_PHONE", generalInformation.getPhone())
-                .addValue("GEN_WORKING_START", generalInformation.getWorkingStart())
-                .addValue("GEN_WORKING_END", generalInformation.getWorkingEnd());
+        try {
+            SqlParameterSource mapParameters = new MapSqlParameterSource()
+                    .addValue("GEN_ADDRESS", generalInformation.getAddress())
+                    .addValue("GEN_PHONE", generalInformation.getPhone())
+                    .addValue("GEN_WORKING_START", generalInformation.getWorkingStart())
+                    .addValue("GEN_WORKING_END", generalInformation.getWorkingEnd());
 
-        this.insertJdbcCall.execute(mapParameters);
+            this.insertJdbcCall.execute(mapParameters);
+        } catch (DataAccessException dataAccessException) {
+            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
+            throw new DAOException("GeneralInformationDAOImpl error. GeneralInformation was not created");
+        }
     }
 }
