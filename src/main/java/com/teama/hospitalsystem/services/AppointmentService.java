@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface AppointmentService {
 
-    void createAppointment(Appointment appointment);
+    Appointment createAppointment(Appointment appointment);
 
     Appointment getAppointmentById(BigInteger id);
 
@@ -26,6 +26,8 @@ public interface AppointmentService {
     Collection<Appointment> getAppointmentByDoctorIdForAMonth(BigInteger doctorId, int month, int year);
 
     Collection<Appointment> getAppointmentByDoctorIdForADay(BigInteger doctorId, WorkDay day);
+
+    Collection<Appointment> getAppointmentByWorkDay(WorkDay day);
 
     void startAppointment(BigInteger appointmentId);
 
