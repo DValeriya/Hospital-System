@@ -26,11 +26,11 @@ public class GeneralInformationDAOImpl implements GeneralInformationDAO {
 
     public RowMapper<GeneralInformation> mapRow = (ResultSet rs, int rowNum) -> {
         return new GeneralInformation(
-                BigInteger.valueOf(rs.getLong("GENERALINFORMATION_ID")),
-                rs.getString("ADDRESS"),
-                rs.getString("PHONE"),
-                rs.getTime("WORKING_START"),
-                rs.getTime("WORKING_END"));
+                BigInteger.valueOf(rs.getLong(GENERALINFORMATION_ID)),
+                rs.getString(ADDRESS),
+                rs.getString(PHONE),
+                rs.getTime(WORKING_START),
+                rs.getTime(WORKING_END));
     };
 
     @Autowired
@@ -39,18 +39,18 @@ public class GeneralInformationDAOImpl implements GeneralInformationDAO {
         this.updateJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName(UPDATE_GEN_INFO_PROCEDURE);
         this.insertJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName(CREATE_GEN_INFO_PROCEDURE);
+                .withFunctionName(CREATE_GEN_INFO_FUNCTION);
     }
 
     @Override
     public void editGeneralInformation(GeneralInformation generalInformation) throws DataAccessException {
         try {
             SqlParameterSource mapParameters = new MapSqlParameterSource()
-                    .addValue("GEN_OBJECT_ID", generalInformation.getGeneralInformationId())
-                    .addValue("GEN_ADDRESS", generalInformation.getAddress())
-                    .addValue("GEN_PHONE", generalInformation.getPhone())
-                    .addValue("GEN_WORKING_START", generalInformation.getWorkingStart())
-                    .addValue("GEN_WORKING_END", generalInformation.getWorkingEnd());
+                    .addValue(GEN_OBJECT_ID, generalInformation.getGeneralInformationId())
+                    .addValue(GEN_ADDRESS, generalInformation.getAddress())
+                    .addValue(GEN_PHONE, generalInformation.getPhone())
+                    .addValue(GEN_WORKING_START, generalInformation.getWorkingStart())
+                    .addValue(GEN_WORKING_END, generalInformation.getWorkingEnd());
 
             this.updateJdbcCall.execute(mapParameters);
         } catch (DataAccessException dataAccessException) {
@@ -71,15 +71,15 @@ public class GeneralInformationDAOImpl implements GeneralInformationDAO {
     }
 
     @Override
-    public void createGeneralInformation(GeneralInformation generalInformation) throws DataAccessException {
+    public BigInteger createGeneralInformation(GeneralInformation generalInformation) throws DataAccessException {
         try {
             SqlParameterSource mapParameters = new MapSqlParameterSource()
-                    .addValue("GEN_ADDRESS", generalInformation.getAddress())
-                    .addValue("GEN_PHONE", generalInformation.getPhone())
-                    .addValue("GEN_WORKING_START", generalInformation.getWorkingStart())
-                    .addValue("GEN_WORKING_END", generalInformation.getWorkingEnd());
+                    .addValue(GEN_ADDRESS, generalInformation.getAddress())
+                    .addValue(GEN_PHONE, generalInformation.getPhone())
+                    .addValue(GEN_WORKING_START, generalInformation.getWorkingStart())
+                    .addValue(GEN_WORKING_END, generalInformation.getWorkingEnd());
 
-            this.insertJdbcCall.execute(mapParameters);
+            return insertJdbcCall.executeFunction(BigInteger.class, mapParameters);
         } catch (DataAccessException dataAccessException) {
             LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
             throw new DAOException("GeneralInformationDAOImpl error. GeneralInformation was not created");

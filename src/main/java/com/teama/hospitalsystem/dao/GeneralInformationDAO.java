@@ -2,14 +2,24 @@ package com.teama.hospitalsystem.dao;
 
 import com.teama.hospitalsystem.models.GeneralInformation;
 import com.teama.hospitalsystem.util.EAVAttrTypesID;
-import com.teama.hospitalsystem.util.EAVObjTypesID;
 
 import java.math.BigInteger;
-import java.sql.Time;
 
 public interface GeneralInformationDAO {
     String UPDATE_GEN_INFO_PROCEDURE = "UPDATE_GENINFO";
-    String CREATE_GEN_INFO_PROCEDURE = "CREATE_GENINFO";
+    String CREATE_GEN_INFO_FUNCTION = "CREATE_GENINFO";
+
+    String GENERALINFORMATION_ID = "GENERALINFORMATION_ID";
+    String ADDRESS = "ADDRESS";
+    String PHONE = "PHONE";
+    String WORKING_START = "WORKING_START";
+    String WORKING_END = "WORKING_END";
+
+    String GEN_OBJECT_ID = "GEN_OBJECT_ID";
+    String GEN_ADDRESS = "GEN_ADDRESS";
+    String GEN_PHONE = "GEN_PHONE";
+    String GEN_WORKING_START = "GEN_WORKING_START";
+    String GEN_WORKING_END = "GEN_WORKING_END";
 
     String SQL_GET_GENERALINFO = "SELECT GENERALINFORMATION.OBJECT_ID GENERALINFORMATION_ID, ADDRESS.VALUE ADDRESS, " +
             "    PHONE.VALUE PHONE, WORKING_START.VALUE WORKING_START, WORKING_END.VALUE WORKING_END " +
@@ -27,5 +37,5 @@ public interface GeneralInformationDAO {
 
     public void editGeneralInformation(GeneralInformation generalInformation);
     public GeneralInformation getGeneralInformation(BigInteger id);
-    public void createGeneralInformation(GeneralInformation generalInformation);
+    public BigInteger createGeneralInformation(GeneralInformation generalInformation);
 }
