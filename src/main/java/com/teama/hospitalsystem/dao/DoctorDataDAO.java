@@ -9,7 +9,16 @@ import java.util.List;
 
 public interface DoctorDataDAO {
     String UPDATE_DOCTORDATA_PROCEDURE = "UPDATE_DOCTORDATA";
-    String CREATE_DOCTORDATA_PROCEDURE = "CREATE_DOCTORDATA";
+    String CREATE_DOCTORDATA_FUNCTION = "CREATE_DOCTORDATA";
+
+    String DOCTORDATA_ID = "DOCTORDATA_ID";
+    String APPOINTMENT_DURATION = "APPOINTMENT_DURATION";
+
+    String PARENT_PARAM = "PARENT";
+    String SPECIALIZATION_PARAM = "SPECIALIZATION";
+
+    String DOCTORDATA_OBJECT_ID = "DOCTORDATA_OBJECT_ID";
+    String DOCTORDATA_APPOINTMENTDURATION = "DOCTORDATA_APPOINTMENTDURATION";
 
     String SQL_GET_DOCTORDATA_BY_DOCTOR_ID = "SELECT DOCTORDATA.OBJECT_ID DOCTORDATA_ID, " +
             "APPOINTMENTDURATION.VALUE APPOINTMENT_DURATION, " +
@@ -43,7 +52,7 @@ public interface DoctorDataDAO {
             " AND SPECIALIZATION.ATTR_ID = " + EAVAttrTypesID.SPEC +
             " AND SPECIALIZATION.reference = ?";
 
-    public void createDoctorData(DoctorData doctorData, BigInteger employerId);
+    public BigInteger createDoctorData(DoctorData doctorData, BigInteger employerId);
     public void editDoctorData(DoctorData doctorData);
     public DoctorData getDoctorDataByDoctorId(BigInteger id);
     public DoctorData getDoctorDataId(BigInteger id);

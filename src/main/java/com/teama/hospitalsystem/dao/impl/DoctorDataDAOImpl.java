@@ -1,7 +1,10 @@
 package com.teama.hospitalsystem.dao.impl;
 
 import com.teama.hospitalsystem.dao.DoctorDataDAO;
+import com.teama.hospitalsystem.exceptions.DAOException;
 import com.teama.hospitalsystem.models.DoctorData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,11 +23,12 @@ public class DoctorDataDAOImpl implements DoctorDataDAO {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcCall updateJdbcCall;
     private final SimpleJdbcCall insertJdbcCall;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DoctorDataDAOImpl.class);
 
     public final RowMapper<DoctorData> mapRow = (ResultSet rs, int rowNum) -> {
         DoctorData doctorData = new DoctorData();
-        doctorData.setDoctorDataId(BigInteger.valueOf(rs.getLong("DOCTORDATA_ID")));
-        doctorData.setAppointmentDuration(rs.getTime("APPOINTMENT_DURATION"));
+        doctorData.setDoctorDataId(BigInteger.valueOf(rs.getLong(DOCTORDATA_ID)));
+        doctorData.setAppointmentDuration(rs.getTime(APPOINTMENT_DURATION));
         return doctorData;
     };
 
@@ -34,37 +38,60 @@ public class DoctorDataDAOImpl implements DoctorDataDAO {
         this.updateJdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName(UPDATE_DOCTORDATA_PROCEDURE);
         this.insertJdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName(CREATE_DOCTORDATA_PROCEDURE);
+                .withProcedureName(CREATE_DOCTORDATA_FUNCTION);
     }
 
     @Override
-    public void createDoctorData(DoctorData doctorData, BigInteger employerId) throws DataAccessException {
-        SqlParameterSource mapParameters = new MapSqlParameterSource()
-                .addValue("APPOINTMENT_DURATION", doctorData.getAppointmentDuration())
-                .addValue("PARENT", employerId)
-                .addValue("SPECIALIZATION", doctorData.getSpec().getSpecializationId());
+    public BigInteger createDoctorData(DoctorData doctorData, BigInteger employerId) throws DataAccessException {
+        try{
+            SqlParameterSource mapParameters = new MapSqlParameterSource()
+                    .addValue(APPOINTMENT_DURATION, doctorData.getAppointmentDuration())
+                    .addValue(PARENT_PARAM, employerId)
+                    .addValue(SPECIALIZATION_PARAM, doctorData.getSpec().getSpecializationId());
 
-        this.insertJdbcCall.execute(mapParameters);
+            return insertJdbcCall.executeFunction(BigInteger.class, mapParameters);
+        } catch (DataAccessException dataAccessException) {
+            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
+            throw new DAOException("DoctorDataDAOImpl error. DoctorData  was not created");
+        }
+
     }
 
     @Override
     public void editDoctorData(DoctorData doctorData) throws DataAccessException {
-        SqlParameterSource mapParameters = new MapSqlParameterSource()
-                .addValue("DOCTORDATA_OBJECT_ID", doctorData.getDoctorDataId())
-                .addValue("DOCTORDATA_APPOINTMENTDURATION", doctorData.getAppointmentDuration())
-                .addValue("SPECIALIZATION", doctorData.getSpec().getSpecializationId());
+        try {
+            SqlParameterSource mapParameters = new MapSqlParameterSource()
+                    .addValue(DOCTORDATA_OBJECT_ID, doctorData.getDoctorDataId())
+                    .addValue(DOCTORDATA_APPOINTMENTDURATION, doctorData.getAppointmentDuration())
+                    .addValue(SPECIALIZATION_PARAM, doctorData.getSpec().getSpecializationId());
 
-        this.updateJdbcCall.execute(mapParameters);
+            this.updateJdbcCall.execute(mapParameters);
+        } catch (DataAccessException dataAccessException) {
+            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
+            throw new DAOException("DoctorDataDAOImpl error. DoctorData was not edited");
+        }
     }
 
     @Override
     public DoctorData getDoctorDataByDoctorId(BigInteger id) throws DataAccessException {
-        return jdbcTemplate.queryForObject(SQL_GET_DOCTORDATA_BY_DOCTOR_ID, mapRow, id);
+        try {
+            return jdbcTemplate.queryForObject(SQL_GET_DOCTORDATA_BY_DOCTOR_ID, mapRow, id);
+        } catch (DataAccessException dataAccessException) {
+            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
+            throw new DAOException("DoctorDataDAOImpl error. Failed to get a doctor by ID");
+        }
+
     }
 
     @Override
     public DoctorData getDoctorDataId(BigInteger id) throws DataAccessException {
-        return jdbcTemplate.queryForObject(SQL_GET_DOCTORDATA_ID, mapRow, id);
+        try {
+            return jdbcTemplate.queryForObject(SQL_GET_DOCTORDATA_ID, mapRow, id);
+        } catch (DataAccessException dataAccessException) {
+            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
+            throw new DAOException("DoctorDataDAOImpl error. Failed to get a doctorData by ID");
+        }
+
     }
 
     @Override
