@@ -41,9 +41,10 @@ public class GeneralInformationServiceImpl implements GeneralInformationService 
     }
 
     @Override
-    public void createGeneralInformation(GeneralInformation generalInformation) throws DAOException {
+    public GeneralInformation createGeneralInformation(GeneralInformation generalInformation) throws DAOException {
         try {
-            generalInfo.createGeneralInformation(generalInformation);
+            BigInteger getNewId = generalInfo.createGeneralInformation(generalInformation);
+            return generalInfo.getGeneralInformation(getNewId);
         } catch (DAOException daoException) {
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
             throw daoException;
