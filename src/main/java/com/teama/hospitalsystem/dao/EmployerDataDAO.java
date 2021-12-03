@@ -1,13 +1,15 @@
 package com.teama.hospitalsystem.dao;
 
 import com.teama.hospitalsystem.models.EmployerData;
+import com.teama.hospitalsystem.models.User;
 import com.teama.hospitalsystem.util.EmployerStatus;
 
 import java.math.BigInteger;
 import java.util.Collection;
 
 public interface EmployerDataDAO {
-    String CREATE_EMP_DATA_PROCEDURE= "CREATE_EMPLOYER_DATA";
+
+    String CREATE_EMP_DATA_FUNCTION= "CREATE_EMPLOYER_DATA";
 
     String EDIT_EMPLOYER_DATA_PROCEDURE = "EDIT_EMPLOYER_DATA";
 
@@ -36,10 +38,17 @@ public interface EmployerDataDAO {
 
     String GET_EMP_DATA_ID_BY_USER_ID = "SELECT OBJECT_ID FROM OBJECTS WHERE PARENT_ID = ? AND OBJECT_TYPE_ID = 2";
 
-    void createEmployerData(EmployerData employerData, BigInteger userId);
+    String HIRING_DATE = "HIRING_DATE";
+    String STATUS = "STATUS";
+    String START_WORKING_TIME = "START_WORKING_TIME";
+    String END_WORKING_TIME = "END_WORKING_TIME";
+    String EMP_PARENT_ID = "EMP_PARENT_ID";
+    String EMPLOYER_ID = "EMPLOYER_ID";
+
+    BigInteger createEmployerData(EmployerData employerData, BigInteger userId);
     void editEmployerData(EmployerData employerData);
     void changeEmployerStatus(EmployerData employerData);
-    EmployerData getEmployerDataByUserId(BigInteger employerDataId);
+    EmployerData getEmployerDataByUserId(BigInteger userId);
     Collection<EmployerData> getEmployerListByStatus(EmployerStatus employerStatus);
     BigInteger getEmployerDataId(BigInteger userId);
 
