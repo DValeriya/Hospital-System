@@ -4,6 +4,7 @@ import com.teama.hospitalsystem.dao.UserDAO;
 import com.teama.hospitalsystem.exceptions.EntityNotFoundException;
 import com.teama.hospitalsystem.models.User;
 import com.teama.hospitalsystem.services.UsersService;
+import com.teama.hospitalsystem.util.EmployerStatus;
 import com.teama.hospitalsystem.util.UserRole;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -58,5 +59,10 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Collection<User> getUsersListByRole(UserRole role) throws DataAccessException {
         return dao.getUsersListByRole(role);
+    }
+
+    @Override
+    public Collection<User> getUsersListByRoleAndStatus(UserRole role, EmployerStatus status) throws DataAccessException {
+        return dao.getUsersListByRoleAndStatus(role, status);
     }
 }

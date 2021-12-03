@@ -1,6 +1,7 @@
 package com.teama.hospitalsystem.services;
 
 import com.teama.hospitalsystem.models.User;
+import com.teama.hospitalsystem.util.EmployerStatus;
 import com.teama.hospitalsystem.util.UserRole;
 
 import java.math.BigInteger;
@@ -14,4 +15,5 @@ public interface UsersService {
     User getUserById(BigInteger id);
     Collection<User> getUsersList();
     Collection<User> getUsersListByRole(UserRole role);
+    Collection<User> getUsersListByRoleAndStatus(UserRole role, EmployerStatus status);
 }

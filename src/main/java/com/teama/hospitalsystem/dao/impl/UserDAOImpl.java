@@ -2,6 +2,7 @@ package com.teama.hospitalsystem.dao.impl;
 
 import com.teama.hospitalsystem.dao.UserDAO;
 import com.teama.hospitalsystem.models.User;
+import com.teama.hospitalsystem.util.EmployerStatus;
 import com.teama.hospitalsystem.util.UserRole;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,13 +22,13 @@ public class UserDAOImpl implements UserDAO {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<User> rowMapper = (rs, rowNum) -> {
-        BigInteger id = rs.getBigDecimal("id").toBigInteger();
-        BigInteger login = rs.getBigDecimal("login").toBigInteger();
-        BigInteger role = rs.getBigDecimal("role").toBigInteger();
-        return new User.Builder(id, login, rs.getString("name"),
-                rs.getString("phone"), UserRole.fromId(role))
-                .withBirthDate(rs.getDate("birth"))
-                .withEmail(rs.getString("email"))
+        BigInteger id = rs.getBigDecimal(USER_ID).toBigInteger();
+        BigInteger login = rs.getBigDecimal(LOGIN).toBigInteger();
+        BigInteger role = rs.getBigDecimal(ROLE).toBigInteger();
+        return new User.Builder(id, login, rs.getString(USER_NAME),
+                rs.getString(PHONENUMBER), UserRole.fromId(role))
+                .withBirthDate(rs.getDate(BIRTHDATE))
+                .withEmail(rs.getString(EMAIL))
                 .build();
     };
 
@@ -35,21 +36,25 @@ public class UserDAOImpl implements UserDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
+    //TODO: createUser should return User (and EmployerData)
     @Override
-    public void createUser(User user) throws DataAccessException {
+    public BigInteger createUser(User user) throws DataAccessException {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withProcedureName(CREATE_USER_PROCEDURE_NAME);
+                .withFunctionName(CREATE_USER_PROCEDURE_NAME);
 
         Map<String, Object> inParamMap = new HashMap<>();
-        inParamMap.put("USER_NAME", user.getName());
-        inParamMap.put("PASSWORD", user.getPassword());
-        inParamMap.put("PHONENUMBER", user.getPhoneNumber());
-        inParamMap.put("BIRTHDATE", user.getBirthDate());
-        inParamMap.put("EMAIL", user.getEmail());
-        inParamMap.put("ROLE", user.getRole().getId());
+        inParamMap.put(USER_NAME, user.getName());
+        inParamMap.put(PASSWORD, user.getPassword());
+        inParamMap.put(PHONENUMBER, user.getPhoneNumber());
+        inParamMap.put(BIRTHDATE, user.getBirthDate());
+        inParamMap.put(EMAIL, user.getEmail());
+        inParamMap.put(ROLE, user.getRole().getId());
+
         SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
-        jdbcCall.execute(in);
+        return jdbcCall.executeFunction(BigInteger.class, in);
+
     }
 
     @Override
@@ -58,12 +63,12 @@ public class UserDAOImpl implements UserDAO {
                 .withProcedureName(EDIT_USER_PROCEDURE_NAME);
 
         Map<String, Object> inParamMap = new HashMap<>();
-        inParamMap.put("USER_ID", user.getId());
-        inParamMap.put("USER_NAME", user.getName());
-        inParamMap.put("PASSWORD", user.getPassword());
-        inParamMap.put("PHONENUMBER", user.getPhoneNumber());
-        inParamMap.put("BIRTHDATE", user.getBirthDate());
-        inParamMap.put("EMAIL", user.getEmail());
+        inParamMap.put(USER_ID, user.getId());
+        inParamMap.put(USER_NAME, user.getName());
+        inParamMap.put(PASSWORD, user.getPassword());
+        inParamMap.put(PHONENUMBER, user.getPhoneNumber());
+        inParamMap.put(BIRTHDATE, user.getBirthDate());
+        inParamMap.put(EMAIL, user.getEmail());
         SqlParameterSource in = new MapSqlParameterSource(inParamMap);
 
         jdbcCall.execute(in);
@@ -87,5 +92,10 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public Collection<User> getUsersListByRole(UserRole role) throws DataAccessException {
         return jdbcTemplate.query(SELECT_USERS_BY_ROLE, rowMapper, role.getId());
+    }
+
+    @Override
+    public Collection<User> getUsersListByRoleAndStatus(UserRole role, EmployerStatus status) throws DataAccessException {
+        return jdbcTemplate.query(SELECT_USERS_BY_ROLE_AND_STATUS, rowMapper, role.getId(), status.getId());
     }
 }
