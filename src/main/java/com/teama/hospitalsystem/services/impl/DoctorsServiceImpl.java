@@ -3,6 +3,7 @@ package com.teama.hospitalsystem.services.impl;
 import com.teama.hospitalsystem.dao.DoctorDataDAO;
 import com.teama.hospitalsystem.exceptions.DAOException;
 import com.teama.hospitalsystem.models.DoctorData;
+import com.teama.hospitalsystem.models.DoctorSpecialization;
 import com.teama.hospitalsystem.services.DoctorSpecializationService;
 import com.teama.hospitalsystem.services.DoctorsService;
 import org.slf4j.Logger;
@@ -70,6 +71,12 @@ public class DoctorsServiceImpl implements DoctorsService {
 
     @Override
     public List<DoctorData> getDoctorListBySpecialization(BigInteger specializationId) {
-        return doctor.getDoctorListBySpecialization(specializationId);
+        DoctorSpecialization doctorSpecialization = doctorSpecializationService.getDoctorSpecializationById(specializationId);
+
+        List<DoctorData> doctorListBySpecialization = doctor.getDoctorListBySpecialization(specializationId);
+
+        doctorListBySpecialization.forEach(doctorData -> doctorData.setSpec(doctorSpecialization));
+
+        return doctorListBySpecialization;
     }
 }

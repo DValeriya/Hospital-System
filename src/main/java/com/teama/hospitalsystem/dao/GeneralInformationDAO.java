@@ -7,7 +7,7 @@ import java.math.BigInteger;
 
 public interface GeneralInformationDAO {
     String UPDATE_GEN_INFO_PROCEDURE = "UPDATE_GENINFO";
-    String CREATE_GEN_INFO_FUNCTION = "CREATE_GENINFO";
+    String CREATE_GEN_INFO_FUNCTION = "CREATE_GEN_INFO";
 
     String GENERALINFORMATION_ID = "GENERALINFORMATION_ID";
     String ADDRESS = "ADDRESS";
