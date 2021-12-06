@@ -10,8 +10,8 @@ import java.math.BigInteger;
 import java.util.Collection;
 
 public interface UserDAO {
-    String CREATE_USER_PROCEDURE_NAME = "CREATE_USER";
-    String EDIT_USER_PROCEDURE_NAME = "EDIT_USER";
+    String CREATE_USER_FUNCTION = "CREATE_USER";
+    String EDIT_USER_PROCEDURE = "EDIT_USER";
 
     String SELECT_USERS = "SELECT USERS.OBJECT_ID AS id, LOGIN.VALUE AS login, USERS.NAME AS name, " +
             "PHONENUMBER.VALUE AS phone, EMAIL.VALUE AS email, BIRTHDATE.DATE_VALUE AS birth, " +

@@ -28,10 +28,10 @@ public class RegistryServiceImpl implements RegistryService {
     }
 
     @Override
-    public void createRegistry(User user) {
+    public BigInteger createRegistry(User user) throws DAOException{
         try{
-            usersServiceImpl.createUser(user);
-            employerDataDAO.createEmployerData(user.getEmployerData(), user.getId());
+            BigInteger id = usersServiceImpl.createUser(user);
+            return employerDataDAO.createEmployerData(user.getEmployerData(), id);
         } catch (DAOException daoException){
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
             throw daoException;
@@ -39,7 +39,7 @@ public class RegistryServiceImpl implements RegistryService {
     }
 
     @Override
-    public void editRegistry(User user) {
+    public void editRegistry(User user) throws DAOException{
         try{
             employerDataDAO.editEmployerData(user.getEmployerData());
         } catch (DAOException daoException){
@@ -49,7 +49,7 @@ public class RegistryServiceImpl implements RegistryService {
     }
 
     @Override
-    public void changeRegistryStatus(EmployerData employerData) {
+    public void changeRegistryStatus(EmployerData employerData) throws DAOException{
         try{
             employerDataDAO.changeEmployerStatus(employerData);
         } catch (DAOException daoException){
@@ -59,19 +59,34 @@ public class RegistryServiceImpl implements RegistryService {
     }
 
     @Override
-    public User getRegistryById(BigInteger userId) {
-        User user = usersServiceImpl.getUserById(userId);
-        user.setEmployerData(employerDataDAO.getEmployerDataByUserId(userId));
-        return user;
+    public User getRegistryById(BigInteger userId) throws DAOException{
+        try{
+            User user = usersServiceImpl.getUserById(userId);
+            user.setEmployerData(employerDataDAO.getEmployerDataByUserId(userId));
+            return user;
+        } catch (DAOException daoException){
+            LOGGER.error(daoException.getLocalizedMessage(), daoException);
+            throw daoException;
+        }
     }
 
     @Override
     public Collection<User> getRegistryList() {
-        return usersServiceImpl.getUsersListByRole(UserRole.REGISTRY);
+        try{
+            return usersServiceImpl.getUsersListByRole(UserRole.REGISTRY);
+        } catch (DAOException daoException){
+            LOGGER.error(daoException.getLocalizedMessage(), daoException);
+            throw daoException;
+        }
     }
 
     @Override
     public Collection<User> getRegistryListByStatus(EmployerStatus employerStatus) {
-        return usersServiceImpl.getUsersListByRoleAndStatus(UserRole.REGISTRY, employerStatus);
+        try{
+            return usersServiceImpl.getUsersListByRoleAndStatus(UserRole.REGISTRY, employerStatus);
+        } catch (DAOException daoException){
+            LOGGER.error(daoException.getLocalizedMessage(), daoException);
+            throw daoException;
+        }
     }
 }

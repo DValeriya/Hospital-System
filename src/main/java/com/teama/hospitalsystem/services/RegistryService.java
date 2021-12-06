@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public interface RegistryService {
 
-    void createRegistry(User user);
+    BigInteger createRegistry(User user);
     void editRegistry(User user);
     void changeRegistryStatus(EmployerData employerData);
     User getRegistryById(BigInteger userId);

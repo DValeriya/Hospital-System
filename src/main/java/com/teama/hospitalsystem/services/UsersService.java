@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public interface UsersService {
 
-    void createUser(User user);
+    BigInteger createUser(User user);
     void editUser(User user);
     User getUserByLoginAndPassword(BigInteger login, String password);
     User getUserById(BigInteger id);
