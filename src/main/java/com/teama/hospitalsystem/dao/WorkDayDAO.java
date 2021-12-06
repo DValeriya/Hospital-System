@@ -10,7 +10,7 @@ import java.util.Date;
 
 public interface WorkDayDAO {
 
-    void createWorkDay(WorkDay workDay);
+    WorkDay createWorkDay(WorkDay workDay);
 
     String CREATE_WORK_DAY_PROCEDURE_NAME = "CREATE_WORK_DAY";
 

@@ -113,4 +113,5 @@ public interface AppointmentDAO {
 
     void changeAppointmentStatus(BigInteger appointmentId, AppointmentStatus status);
     Collection<Appointment> getAppointmentByWorkDay(WorkDay day);
+    Collection<Appointment> getAppointmentByWorkDay(BigInteger workDayId);
 }

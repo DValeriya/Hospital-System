@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.Date;
@@ -32,15 +33,16 @@ public class WorkDayDAOImpl implements WorkDayDAO {
             rs.getDate("WORK_DATE"));
 
     @Override
-    public void createWorkDay(WorkDay workDay) throws DataAccessException {
+    public WorkDay createWorkDay(WorkDay workDay) throws DataAccessException {
         try {
             SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                    .withProcedureName(CREATE_WORK_DAY_PROCEDURE_NAME);
+                    .withFunctionName(CREATE_WORK_DAY_PROCEDURE_NAME);
             Map<String, Object> params = new HashMap<>();
             params.put("EMPLOYER_ID", workDay.getEmployerId());
             params.put("WORK_DATE", workDay.getDate());
             SqlParameterSource in = new MapSqlParameterSource(params);
-            jdbcCall.execute(in);
+            workDay.setWorkDayId(jdbcCall.executeFunction(BigDecimal.class, in).toBigInteger());
+            return workDay;
         } catch (DataAccessException dataAccessException) {
             LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
             throw new DAOException("WorkDayDAOImpl error. WorkDay was not created");
