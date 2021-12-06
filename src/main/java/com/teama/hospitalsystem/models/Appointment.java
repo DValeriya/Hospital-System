@@ -1,6 +1,10 @@
 package com.teama.hospitalsystem.models;
 
 import com.teama.hospitalsystem.util.AppointmentStatus;
+
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 
 import java.util.Date;
@@ -9,15 +13,23 @@ import java.util.Objects;
 
 public class Appointment {
     private BigInteger id;
+    @Future
+    @NotNull(message = "Expected start is mandatory")
     private Date expectedStart;
+    @Future
+    @NotNull(message = "Expected end is mandatory")
     private Date expectedEnd;
+    @Future
     private Date actualStart;
+    @Future
     private Date actualEnd;
+    @NotNull(message = "Doctor's ID is mandatory")
     private BigInteger doctorId;
     private BigInteger patientId;
     private String diagnosis;
     private String referral;
     private BigInteger nextAppointment;
+    @NotNull(message = "Status is mandatory")
     private AppointmentStatus status;
     /* Ctor */
 

@@ -2,6 +2,10 @@ package com.teama.hospitalsystem.models;
 
 import com.teama.hospitalsystem.util.UserRole;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Objects;
@@ -9,11 +13,17 @@ import java.util.Objects;
 public class User {
     private final BigInteger id;
     private final BigInteger login;
+    @NotNull
     private String password;
+    @NotNull
     private String name;
+    @Pattern(regexp="\\(\\d{3}\\)\\d{2}-\\d{2}-\\d{3}")
     private String phoneNumber;
+    @Past
     private Date birthDate;
+    @Email
     private String email;
+    @NotNull
     private UserRole role;
     private EmployerData employerData;
 

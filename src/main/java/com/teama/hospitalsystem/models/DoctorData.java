@@ -1,12 +1,15 @@
 package com.teama.hospitalsystem.models;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.sql.Time;
 import java.util.Objects;
 
 public class DoctorData {
     private BigInteger doctorDataId;
+    @NotNull
     private DoctorSpecialization spec;
+    @NotNull
     private Time appointmentDuration;
     /* Ctor */
 
