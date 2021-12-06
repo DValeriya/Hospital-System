@@ -14,7 +14,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import sun.java2d.windows.GDIRenderer;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
