@@ -29,6 +29,8 @@ public interface AppointmentService {
 
     Collection<Appointment> getAppointmentByWorkDay(WorkDay day);
 
+    Collection<Appointment> getAppointmentByWorkDay(BigInteger workDayId);
+
     void startAppointment(BigInteger appointmentId);
 
     void endAppointment(BigInteger appointmentId);
