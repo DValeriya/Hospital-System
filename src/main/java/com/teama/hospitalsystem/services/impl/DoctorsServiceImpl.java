@@ -6,6 +6,7 @@ import com.teama.hospitalsystem.models.DoctorData;
 import com.teama.hospitalsystem.models.DoctorSpecialization;
 import com.teama.hospitalsystem.services.DoctorSpecializationService;
 import com.teama.hospitalsystem.services.DoctorsService;
+import com.teama.hospitalsystem.services.RegistryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,16 +19,18 @@ public class DoctorsServiceImpl implements DoctorsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorsServiceImpl.class);
     private final DoctorDataDAO doctor;
     private final DoctorSpecializationService doctorSpecializationService;
+    private final RegistryService registryService;
 
-    public DoctorsServiceImpl(DoctorDataDAO doctor, DoctorSpecializationService doctorSpecializationService) {
+    public DoctorsServiceImpl(DoctorDataDAO doctor, DoctorSpecializationService doctorSpecializationService, RegistryService registryService) {
         this.doctor = doctor;
         this.doctorSpecializationService = doctorSpecializationService;
+        this.registryService = registryService;
     }
 
     @Override
     public DoctorData createDoctor(DoctorData doctorData, BigInteger employerId) throws DAOException{
         try {
-            BigInteger getNewId = doctor.createDoctorData(doctorData, employerId); //TODO
+            BigInteger getNewId = doctor.createDoctorData(doctorData, employerId);
             return getDoctorDataId(getNewId);
         } catch (DAOException daoException) {
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
