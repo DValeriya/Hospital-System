@@ -31,7 +31,7 @@ public class GeneralInformationController {
         }
     }
 
-    @PostMapping("/create/general-info")
+    @PostMapping("/create")
     public ResponseEntity<?> createGeneralInformation (@RequestBody GeneralInformation generalInformation) {
         try {
             GeneralInformation generalInfo = generalInformationService.createGeneralInformation(generalInformation);
@@ -42,7 +42,7 @@ public class GeneralInformationController {
         }
     }
 
-    @PutMapping("/edit/general-info/{id}")
+    @PutMapping("/{id}/edit")
     public ResponseEntity<?> editGeneralInformation(@PathVariable BigInteger id, @RequestBody GeneralInformation generalInformation) {
         try {
             GeneralInformation generalInfo = generalInformationService.getGeneralInformation(id);
