@@ -1,15 +1,19 @@
 package com.teama.hospitalsystem.services.impl;
 
 import com.teama.hospitalsystem.dao.DoctorDataDAO;
+import com.teama.hospitalsystem.dao.EmployerDataDAO;
 import com.teama.hospitalsystem.exceptions.DAOException;
 import com.teama.hospitalsystem.models.DoctorData;
 import com.teama.hospitalsystem.models.DoctorSpecialization;
+import com.teama.hospitalsystem.models.User;
 import com.teama.hospitalsystem.services.DoctorSpecializationService;
 import com.teama.hospitalsystem.services.DoctorsService;
 import com.teama.hospitalsystem.services.RegistryService;
+import com.teama.hospitalsystem.services.UsersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -19,18 +23,23 @@ public class DoctorsServiceImpl implements DoctorsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DoctorsServiceImpl.class);
     private final DoctorDataDAO doctor;
     private final DoctorSpecializationService doctorSpecializationService;
-    private final RegistryService registryService;
+    private final UsersService usersService;
+    private final EmployerDataDAO employerDataDAO;
 
-    public DoctorsServiceImpl(DoctorDataDAO doctor, DoctorSpecializationService doctorSpecializationService, RegistryService registryService) {
+    public DoctorsServiceImpl(DoctorDataDAO doctor, DoctorSpecializationService doctorSpecializationService, RegistryService registryService, UsersService usersService, EmployerDataDAO employerDataDAO) {
         this.doctor = doctor;
         this.doctorSpecializationService = doctorSpecializationService;
-        this.registryService = registryService;
+        this.usersService = usersService;
+        this.employerDataDAO = employerDataDAO;
     }
 
     @Override
-    public DoctorData createDoctor(DoctorData doctorData, BigInteger employerId) throws DAOException{
+    @Transactional
+    public DoctorData createDoctor(User user) throws DAOException{
         try {
-            BigInteger getNewId = doctor.createDoctorData(doctorData, employerId);
+            BigInteger idUser = usersService.createUser(user);
+            BigInteger idEmployer = employerDataDAO.createEmployerData(user.getEmployerData(), idUser);
+            BigInteger getNewId = doctor.createDoctorData(user.getEmployerData().getDoctorData(), idEmployer);
             return getDoctorDataId(getNewId);
         } catch (DAOException daoException) {
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
