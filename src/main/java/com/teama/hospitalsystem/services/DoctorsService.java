@@ -7,9 +7,9 @@ import java.math.BigInteger;
 import java.util.List;
 
 public interface DoctorsService {
-    public DoctorData createDoctor(User user);
-    public void editDoctor(DoctorData doctorData);
-    public DoctorData getDoctorDataById(BigInteger id);
-    public DoctorData getDoctorDataId(BigInteger id);
-    public List<DoctorData> getDoctorListBySpecialization(BigInteger specializationId);
+    DoctorData createDoctor(User user);
+    void editDoctor(DoctorData doctorData);
+    DoctorData getDoctorDataById(BigInteger id);
+    DoctorData getDoctorDataId(BigInteger id);
+    List<DoctorData> getDoctorListBySpecialization(BigInteger specializationId);
 }

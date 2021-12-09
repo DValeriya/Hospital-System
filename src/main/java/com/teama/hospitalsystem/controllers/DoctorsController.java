@@ -1,8 +1,8 @@
 package com.teama.hospitalsystem.controllers;
 
+import com.teama.hospitalsystem.controllers.request.UserRequest;
 import com.teama.hospitalsystem.exceptions.DAOException;
 import com.teama.hospitalsystem.models.DoctorData;
-import com.teama.hospitalsystem.models.User;
 import com.teama.hospitalsystem.services.DoctorsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +26,9 @@ public class DoctorsController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createDoctor(@Valid @RequestBody User user) {
+    public ResponseEntity<?> createDoctor(@Valid @RequestBody UserRequest user) {
         try {
-            DoctorData doctor = doctorsService.createDoctor(user);
+            DoctorData doctor = doctorsService.createDoctor(user.asUser());
             return ResponseEntity.ok(doctor);
         } catch (DAOException daoException) {
             return ResponseEntity.badRequest().body(daoException.getMessage());
@@ -38,7 +38,7 @@ public class DoctorsController {
     @PutMapping("/{id}/edit")
     public ResponseEntity<?> editDoctor(@PathVariable BigInteger id, @RequestBody DoctorData doctorData) {
         try {
-            DoctorData doctor = doctorsService.getDoctorDataById(id);
+            DoctorData doctor = doctorsService.getDoctorDataId(id);
 
             doctor.setAppointmentDuration(doctorData.getAppointmentDuration());
 
@@ -54,8 +54,7 @@ public class DoctorsController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getDoctorDataById(@PathVariable BigInteger id) {
         try {
-            System.out.println(id);
-            DoctorData doctorData = doctorsService.getDoctorDataById(id);
+            DoctorData doctorData = doctorsService.getDoctorDataId(id);
             return ResponseEntity.ok(doctorData);
         } catch (DAOException daoException) {
             LOGGER.error(daoException.getMessage(), daoException, daoException.getCause());

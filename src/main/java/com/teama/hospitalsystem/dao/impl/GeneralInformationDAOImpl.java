@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.ResultSet;
 
@@ -24,14 +25,12 @@ public class GeneralInformationDAOImpl implements GeneralInformationDAO {
     private final SimpleJdbcCall insertJdbcCall;
     private static final Logger LOGGER = LoggerFactory.getLogger(GeneralInformationDAOImpl.class);
 
-    public RowMapper<GeneralInformation> mapRow = (ResultSet rs, int rowNum) -> {
-        return new GeneralInformation(
-                BigInteger.valueOf(rs.getLong(GENERALINFORMATION_ID)),
-                rs.getString(ADDRESS),
-                rs.getString(PHONE),
-                rs.getTime(WORKING_START),
-                rs.getTime(WORKING_END));
-    };
+    public RowMapper<GeneralInformation> mapRow = (ResultSet rs, int rowNum) -> new GeneralInformation(
+            rs.getBigDecimal(GENERALINFORMATION_ID).toBigInteger(),
+            rs.getString(ADDRESS),
+            rs.getString(PHONE),
+            rs.getTime(WORKING_START),
+            rs.getTime(WORKING_END));
 
     @Autowired
     public GeneralInformationDAOImpl(JdbcTemplate jdbcTemplate) {
@@ -79,7 +78,7 @@ public class GeneralInformationDAOImpl implements GeneralInformationDAO {
                     .addValue(GEN_WORKING_START, generalInformation.getWorkingStart())
                     .addValue(GEN_WORKING_END, generalInformation.getWorkingEnd());
 
-            return insertJdbcCall.executeFunction(BigInteger.class, mapParameters);
+            return insertJdbcCall.executeFunction(BigDecimal.class, mapParameters).toBigInteger();
         } catch (DataAccessException dataAccessException) {
             LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
             throw new DAOException("GeneralInformationDAOImpl error. GeneralInformation was not created");

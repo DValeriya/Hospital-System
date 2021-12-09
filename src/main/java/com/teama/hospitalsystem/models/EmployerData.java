@@ -68,11 +68,11 @@ public class EmployerData {
         public String toString() {
             return "EmployerData{" +
                     "employerDataId=" + employerDataId +
-                    ", hiringDate" + hiringDate +
-                    ", status" + status +
-                    ", startWorkingTime" + startWorkingTime +
-                    ", endWorkingTime" + endWorkingTime +
-                    ", doctorData" + doctorData +
+                    ", hiringDate=" + hiringDate +
+                    ", status=" + status +
+                    ", startWorkingTime=" + startWorkingTime +
+                    ", endWorkingTime=" + endWorkingTime +
+                    ", doctorData=" + doctorData +
                     "}";
         }
 }

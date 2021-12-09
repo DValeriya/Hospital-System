@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -73,7 +74,8 @@ public class DoctorsServiceImpl implements DoctorsService {
     public DoctorData getDoctorDataId(BigInteger id) throws DAOException {
         try {
             DoctorData doctorData = doctor.getDoctorDataId(id);
-            doctorSpecializationService.getDoctorSpecializationById(id);
+            DoctorSpecialization specialization = doctorSpecializationService.getDoctorSpecializationByDoctorDataId(id);
+            doctorData.setSpec(specialization);
             return doctorData;
         } catch (DAOException daoException) {
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
@@ -83,12 +85,17 @@ public class DoctorsServiceImpl implements DoctorsService {
 
     @Override
     public List<DoctorData> getDoctorListBySpecialization(BigInteger specializationId) {
-        DoctorSpecialization doctorSpecialization = doctorSpecializationService.getDoctorSpecializationById(specializationId);
+        try {
+            DoctorSpecialization doctorSpecialization = doctorSpecializationService.getDoctorSpecializationById(specializationId);
 
-        List<DoctorData> doctorListBySpecialization = doctor.getDoctorListBySpecialization(specializationId);
+            List<DoctorData> doctorListBySpecialization = doctor.getDoctorListBySpecialization(specializationId);
 
-        doctorListBySpecialization.forEach(doctorData -> doctorData.setSpec(doctorSpecialization));
+            doctorListBySpecialization.forEach(doctorData -> doctorData.setSpec(doctorSpecialization));
 
-        return doctorListBySpecialization;
+            return doctorListBySpecialization;
+        } catch (DAOException daoException) {
+            LOGGER.error(daoException.getLocalizedMessage(), daoException);
+            return new ArrayList<>();
+        }
     }
 }

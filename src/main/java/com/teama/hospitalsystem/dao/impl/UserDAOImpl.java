@@ -15,10 +15,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -48,7 +47,6 @@ public class UserDAOImpl implements UserDAO {
                 .withProcedureName(EDIT_USER_PROCEDURE);
     }
 
-
     @Override
     public BigInteger createUser(User user) throws DataAccessException {
         try{
@@ -60,7 +58,7 @@ public class UserDAOImpl implements UserDAO {
                     .addValue(EMAIL, user.getEmail())
                     .addValue(ROLE, user.getRole().getId());
 
-            return insertJdbcCall.executeFunction(BigInteger.class, mapParameters);
+            return insertJdbcCall.executeFunction(BigDecimal.class, mapParameters).toBigInteger();
 
         } catch (DataAccessException dataAccessException){
             LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);

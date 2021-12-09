@@ -15,10 +15,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Repository
 public class EmployerDataDAOImpl implements EmployerDataDAO {
@@ -56,7 +55,7 @@ public class EmployerDataDAOImpl implements EmployerDataDAO {
                     .addValue(END_WORKING_TIME, employerData.getEndWorkingTime())
                     .addValue(EMP_PARENT_ID, userId);
 
-            return insertJdbcCall.executeFunction(BigInteger.class, mapParameters);
+            return insertJdbcCall.executeFunction(BigDecimal.class, mapParameters).toBigInteger();
 
         } catch (DataAccessException dataAccessException){
             LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);

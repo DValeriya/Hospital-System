@@ -65,6 +65,8 @@ public class DoctorSpecializationDAOImpl implements DoctorSpecializationDAO {
     @Override
     public DoctorSpecialization getDoctorSpecializationById(BigInteger id) throws DataAccessException {
         try {
+            System.out.println(SELECT_DOCTOR_SPEC_BY_ID);
+            System.out.println(id);
             return jdbcTemplate.queryForObject(SELECT_DOCTOR_SPEC_BY_ID, rowMapper, id);
         } catch (DataAccessException dataAccessException) {
             LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);

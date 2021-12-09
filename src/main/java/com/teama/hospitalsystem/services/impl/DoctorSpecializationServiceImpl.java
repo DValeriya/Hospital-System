@@ -46,6 +46,16 @@ public class DoctorSpecializationServiceImpl implements DoctorSpecializationServ
     @Override
     public DoctorSpecialization getDoctorSpecializationById(BigInteger id) throws DAOException{
         try {
+            return dao.getDoctorSpecializationById(id);
+        } catch (DAOException daoException) {
+            LOGGER.error(daoException.getLocalizedMessage(), daoException);
+            throw daoException;
+        }
+    }
+
+    @Override
+    public DoctorSpecialization getDoctorSpecializationByDoctorDataId(BigInteger id) {
+        try {
             return dao.getDoctorSpecializationByDoctorDataId(id);
         } catch (DAOException daoException) {
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
