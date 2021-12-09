@@ -56,8 +56,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             appointment.setId(jdbcCall.executeFunction(BigDecimal.class,in).toBigInteger());
             return appointment;
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tAppointment: " + appointment.toString() +"\nMap: " + convertWithStream(map), ex);
-            throw new DAOException("AppointmentDAOImpl error. Appointment was not created.\n", ex);
+            String error = "Failed to create appointment in "+ AppointmentDAOImpl.class + " method: createAppointment\nGot parameters:\n\tAppointment: "
+                    + appointment.toString() +"\n\tMap: " + convertWithStream(map)+'\n';
+            LOGGER.error( error, ex);
+            throw new DAOException(error, ex);
         }
 
     }
@@ -67,8 +69,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         try{
             return jdbcTemplate.queryForObject(SQL_GET_BY_ID, rowMapper, id);
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tId: " + id.toString(), ex);
-            throw new DAOException("AppointmentDAOImpl error. Failed to get information by id.\n", ex);
+            String error = String.format("Failed to get appointment in %s method: getAppointmentById\nGot parameters:\n\tid: %d\n",
+                    AppointmentDAOImpl.class, id);
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
@@ -77,8 +81,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         try{
             return jdbcTemplate.query(SQL_GET_BY_DOCTOR_ID, rowMapper, doctorId);
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tId: " + doctorId.toString(), ex);
-            throw new DAOException("AppointmentDAOImpl error. Failed to get information by doctorId.\n", ex);
+            String error= String.format("Failed to get appointment in %s method: getAppointmentByDoctorId\nGot parameters:\n\tdoctorId: %d\n",
+                    AppointmentDAOImpl.class, doctorId);
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
@@ -88,8 +94,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             return jdbcTemplate.query(SQL_GET_BY_DOCTOR_ID_AND_DAY, rowMapper, day.getWorkDayId(),
                     doctorId);
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tId: " + doctorId.toString() + "\n\tWorkDay: " + day.toString(), ex);
-            throw new DAOException("AppointmentDAOImpl error. Failed to get information by doctorId and by WorkDay.\n", ex);
+            String error = String.format("Failed to get appointment in %s method: getAppointmentByDoctorIdForADay\nGot parameters:\n\tdoctorId: %d\n\tWorkDay: %s\n",
+                    AppointmentDAOImpl.class, doctorId, day.toString());
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
@@ -98,8 +106,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         try{
             return jdbcTemplate.query(SQL_GET_BY_DOCTOR_ID_AND_DAY, rowMapper, doctorId, String.format("[1-31]-%s-%s*", month, year));
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tId: " + doctorId.toString() + "\n\tMonth: " + month + "\n\tYear: " + year, ex);
-            throw new DAOException("AppointmentDAOImpl error. Failed to ged information by doctorId and Date\n", ex);
+            String error = String.format("Failed to get appointment in %s method: getAppointmentByDoctorIdForAMonth\nGot parameters:\n\tdoctorId: %d\n\tMonth: %s\n\tYear: %s\n",
+                    AppointmentDAOImpl.class, doctorId, month, year);
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
@@ -109,8 +119,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         try{
             return jdbcTemplate.query(SQL_GET_BY_PATIENT_ID, rowMapper, patientId);
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tId: " + patientId.toString(), ex);
-            throw new DAOException("AppointmentDAOImpl error. Failed to get information by patientId.\n", ex);
+            String error = String.format("Failed to get appointment in %s method: getAppointmentByPatientId\nGot parameters:\n\tpatientId: %d\n",
+                    AppointmentDAOImpl.class, patientId);
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
@@ -120,8 +132,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
             return jdbcTemplate.query(SQL_GET_BY_PATIENT_ID_AND_DATE, rowMapper, patientId,
                     sdf.format(date) + '*');
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tId: " + patientId.toString() + "\n\tDate: " + date.toString(), ex);
-            throw new DAOException("AppointmentDAOImpl error. Failed to get information by patientId and Date.\n", ex);
+            String error = String.format("Failed to get appointment in %s method: getAppointmentByPatientIdForADate\nGot parameters:\n\tpatientId: %d\n\tDate: %s\n",
+                    AppointmentDAOImpl.class, patientId, sdf.format(date));
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
@@ -130,8 +144,11 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         try{
             jdbcTemplate.update(SQL_CHANGE_APPOINTMENT_STATUS, status.getId(), appointmentId);
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tId: " + appointmentId.toString() + "\n\tStatus: " + status.toString(), ex);
-            throw new DAOException("AppointmentDAOImpl error. Failed to change appointment status.\n", ex);
+            String error =
+                    String.format("Failed to edit appointment in %s method: changeAppointmentStatus\nGot parameters:\n\tappointmentId: %d\n\tstatus:%s\n",
+                            AppointmentDAOImpl.class, appointmentId, status);
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
@@ -140,8 +157,11 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         try{
             return jdbcTemplate.query(SQL_GET_BY_WORKDAY, rowMapper, day.getWorkDayId());
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tWorkDay: " + day.toString(), ex);
-            throw new DAOException("AppointmentDAOImpl error. Failed to get information by WorkDay.\n", ex);
+            String error =
+                    String.format("Failed to пуе appointment in %s method: getAppointmentByWorkDay\nGot parameters:\n\tWorkDay: %s\n",
+                            AppointmentDAOImpl.class,day.toString());
+            LOGGER.error(error);
+            throw new DAOException(error, ex);
         }
     }
     @Override
@@ -149,21 +169,28 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         try{
             return jdbcTemplate.query(SQL_GET_BY_WORKDAY, rowMapper, workDayId);
         }catch (DataAccessException ex){
-            LOGGER.error("Got parameters:\n\tWorkDayId: " + workDayId.toString(), ex);
-            throw new DAOException("AppointmentDAOImpl error. Failed to get information by WorkDay.\n", ex);
+            String error =
+                    String.format("Failed to пуе appointment in %s method: getAppointmentByWorkDay\nGot parameters:\n\tworkDayId: %s\n",
+                            AppointmentDAOImpl.class,workDayId.toString());
+            LOGGER.error(error);
+            throw new DAOException(error, ex);
         }
     }
 
     @Override
     public void editAppointment(Appointment appointment) throws DataAccessException {
+        Map<String, Object> map = fillHashMap(appointment);
         try{
             SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
                     .withProcedureName("Update_Appointment");
-            SqlParameterSource in = new MapSqlParameterSource(fillHashMap(appointment));
+            SqlParameterSource in = new MapSqlParameterSource(map);
             jdbcCall.execute(in);
         }catch (DataAccessException ex){
-            LOGGER.error(ex.getMessage());
-            throw new DAOException("AppointmentDAOImpl error. Failed to edit information by id.\n", ex);
+            String error =
+                    String.format("Failed to edit appointment in %s method: editAppointment\nGot parameters:\n\tappointment: %s\n\tMap: %s\n",
+                            AppointmentDAOImpl.class, appointment.toString(), convertWithStream(map));
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
@@ -172,8 +199,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         try{
             jdbcTemplate.update(SQL_APPOINTMENT_MANIPULATION, 21, appointmentId, Calendar.getInstance().getTime());
         }catch (DataAccessException ex){
-            LOGGER.error(ex.getMessage());
-            throw new DAOException("AppointmentDAOImpl error. Failed to start appointment.\n", ex);
+            String error = String.format("Failed to start appointment in %s method: startAppointment\nGot parameters:\n\tappointmentId: %d\n",
+                    AppointmentDAOImpl.class, appointmentId);
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
@@ -182,8 +211,10 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         try{
             jdbcTemplate.update(SQL_APPOINTMENT_MANIPULATION, 21, appointmentId, Calendar.getInstance().getTime());
         }catch (DataAccessException ex){
-            LOGGER.error(ex.getMessage());
-            throw new DAOException("AppointmentDAOImpl error. Failed to end appointment.\n", ex);
+            String error = String.format("Failed to start appointment in %s method: endAppointment\nGot parameters:\n\tappointmentId: %d\n      ",
+                    AppointmentDAOImpl.class, appointmentId);
+            LOGGER.error(error, ex);
+            throw new DAOException(error, ex);
         }
     }
 
