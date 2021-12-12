@@ -1,8 +1,8 @@
 package com.teama.hospitalsystem.controllers;
 
-import com.teama.hospitalsystem.controllers.request.UserRequest;
 import com.teama.hospitalsystem.exceptions.DAOException;
 import com.teama.hospitalsystem.models.DoctorData;
+import com.teama.hospitalsystem.models.User;
 import com.teama.hospitalsystem.services.DoctorsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +26,9 @@ public class DoctorsController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createDoctor(@Valid @RequestBody UserRequest user) {
+    public ResponseEntity<?> createDoctor(@Valid @RequestBody User user) {
         try {
-            DoctorData doctor = doctorsService.createDoctor(user.asUser());
+            DoctorData doctor = doctorsService.createDoctor(user);
             return ResponseEntity.ok(doctor);
         } catch (DAOException daoException) {
             return ResponseEntity.badRequest().body(daoException.getMessage());

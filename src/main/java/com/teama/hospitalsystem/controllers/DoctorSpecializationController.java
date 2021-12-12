@@ -42,9 +42,8 @@ public class DoctorSpecializationController {
     }
 
     @GetMapping
-    public ResponseEntity<?> etDoctorSpecializationList() {
+    public ResponseEntity<?> getDoctorSpecializationList() {
         Collection<DoctorSpecialization> doctorSpecializationList = doctorSpecializationService.getDoctorSpecializationList();
         return ResponseEntity.ok(doctorSpecializationList);
     }
-
 }

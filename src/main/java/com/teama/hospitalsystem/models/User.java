@@ -1,5 +1,8 @@
 package com.teama.hospitalsystem.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.teama.hospitalsystem.util.UserRole;
 
 import javax.validation.constraints.Email;
@@ -10,6 +13,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Objects;
 
+@JsonDeserialize(builder = User.Builder.class)
 public class User {
     private final BigInteger id;
     private final BigInteger login;
@@ -91,6 +95,7 @@ public class User {
         this.employerData = employerData;
     }
 
+    @JsonPOJOBuilder
     public static class Builder {
         private String email = null;
         private Date birthDate = null;
@@ -109,7 +114,8 @@ public class User {
             this.login = login;
         }
 
-        public Builder(String name, String password, String phoneNumber, UserRole role) {
+        public Builder(@JsonProperty("name") String name, @JsonProperty("password") String password,
+                       @JsonProperty("phoneNumber") String phoneNumber, @JsonProperty("role") UserRole role) {
             this.name = name;
             this.password = password;
             this.phoneNumber = phoneNumber;
