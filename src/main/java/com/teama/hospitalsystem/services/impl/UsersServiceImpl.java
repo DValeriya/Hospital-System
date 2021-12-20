@@ -48,9 +48,9 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public User getUserByLoginAndPassword(BigInteger login, String password) throws DAOException{
+    public User getUserByLogin(BigInteger login) throws DAOException {
         try {
-            return dao.getUserByLoginAndPassword(login, password);
+            return dao.getUserByLogin(login);
         } catch (DAOException daoException){
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
             throw daoException;

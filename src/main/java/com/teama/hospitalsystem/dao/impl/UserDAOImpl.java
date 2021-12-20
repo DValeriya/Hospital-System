@@ -39,6 +39,20 @@ public class UserDAOImpl implements UserDAO {
                 .build();
     };
 
+    private final RowMapper<User> rowMapperIncludingPassword = (rs, rowNum) -> {
+        BigInteger id = rs.getBigDecimal(USER_ID).toBigInteger();
+        BigInteger login = rs.getBigDecimal(LOGIN).toBigInteger();
+        BigInteger role = rs.getBigDecimal(ROLE).toBigInteger();
+        User user = new User.Builder(id, login, rs.getString(USER_NAME),
+                rs.getString(PHONENUMBER), UserRole.fromId(role))
+                .withBirthDate(rs.getDate(BIRTHDATE))
+                .withEmail(rs.getString(EMAIL))
+                .build();
+        user.setPassword(rs.getString(PASSWORD));
+        return user;
+
+    };
+
     public UserDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertJdbcCall = new SimpleJdbcCall(jdbcTemplate)
@@ -86,9 +100,9 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserByLoginAndPassword(BigInteger login, String password) throws DataAccessException {
+    public User getUserByLogin(BigInteger login) throws DataAccessException {
         try{
-            return jdbcTemplate.queryForObject(SELECT_USER_BY_LOGIN_AND_PASSWORD, rowMapper, login, password);
+            return jdbcTemplate.queryForObject(SELECT_USER_BY_LOGIN_WITH_PASSWORD, rowMapperIncludingPassword, login);
         } catch (DataAccessException dataAccessException){
             LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
             throw new DAOException("UserDAOImpl error. Failed to get User by login and password.");

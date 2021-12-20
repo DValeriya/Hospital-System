@@ -11,7 +11,7 @@ public interface UsersService {
 
     BigInteger createUser(User user);
     void editUser(User user);
-    User getUserByLoginAndPassword(BigInteger login, String password);
+    User getUserByLogin(BigInteger login);
     User getUserById(BigInteger id);
     Collection<User> getUsersList();
     Collection<User> getUsersListByRole(UserRole role);
