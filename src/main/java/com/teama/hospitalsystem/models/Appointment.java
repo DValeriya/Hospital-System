@@ -1,5 +1,8 @@
 package com.teama.hospitalsystem.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.teama.hospitalsystem.util.AppointmentDeserializer;
 import com.teama.hospitalsystem.util.AppointmentStatus;
 
 import javax.validation.constraints.Future;
@@ -10,18 +13,22 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Objects;
 
-
+@JsonDeserialize(using = AppointmentDeserializer.class)
 public class Appointment {
     private BigInteger id;
     @Future
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     @NotNull(message = "Expected start is mandatory")
     private Date expectedStart;
     @Future
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     @NotNull(message = "Expected end is mandatory")
     private Date expectedEnd;
     @Future
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     private Date actualStart;
     @Future
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     private Date actualEnd;
     @NotNull(message = "Doctor's ID is mandatory")
     private BigInteger doctorId;

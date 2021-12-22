@@ -29,7 +29,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try{
             return appointmentDAO.createAppointment(appointment);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: createAppointment\nGot parameters:\n\tappointment: %s\n",
+            String error = String.format("Failed to create appointment in %s method: createAppointment\nGot parameters:\n\tappointment: %s\n",
                     AppointmentServiceImpl.class, appointment.toString());
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);
@@ -41,7 +41,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try{
             return appointmentDAO.getAppointmentById(id);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: getAppointmentById\nGot parameters:\n\tid: %d\n",
+            String error = String.format(GET_APPOINTMENT_BY_ID_ERROR,
                     AppointmentServiceImpl.class, id);
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);
@@ -53,7 +53,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try{
             appointmentDAO.editAppointment(appointment);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: editAppointment\nGot parameters:\n\tappointment: %s\n",
+            String error = String.format(EDIT_APPOINTMENT_ERROR,
                     AppointmentServiceImpl.class, appointment.toString());
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);
@@ -65,7 +65,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try{
             return appointmentDAO.getAppointmentByPatientId(patientId);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: getAppointmentByPatientId\nGot parameters:\n\tpatientId: %d\n",
+            String error = String.format(GET_APPOINTMENT_BY_PATIENT_ID_ERROR,
                     AppointmentServiceImpl.class, patientId);
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);
@@ -77,7 +77,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try {
             return appointmentDAO.getAppointmentByPatientIdForADate(patientId, date);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: getAppointmentByPatientIdForADate\nGot parameters:\n\tpatientId: %d\n\tDate: %s",
+            String error = String.format(GET_APPOINTMENT_BY_PATIENT_FOR_A_DATE_ID_ERROR,
                     AppointmentServiceImpl.class, patientId, sdf.format(date));
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);
@@ -89,7 +89,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try{
             return appointmentDAO.getAppointmentByDoctorId(doctorId);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: getAppointmentByDoctorId\nGot parameters:\n\tdoctorId: %d\n",
+            String error = String.format(GET_APPOINTMENT_BY_DOCTOR_ID_ERROR,
                     AppointmentServiceImpl.class, doctorId);
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);
@@ -101,7 +101,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try{
             return appointmentDAO.getAppointmentByDoctorIdForAMonth(doctorId, month, year);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: getAppointmentByDoctorIdForAMonth\nGot parameters:\n\tdoctorId: %d\n\tMonth: %s\n\tYear: %s\n",
+            String error = String.format(GET_APPOINTMENT_BY_DOCTOR_ID_FOR_A_MONTH_ERROR,
                     AppointmentServiceImpl.class, doctorId, month, year);
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);
@@ -113,7 +113,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try {
             return appointmentDAO.getAppointmentByDoctorIdForADay(doctorId, day);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: getAppointmentByDoctorIdForADay\nGot parameters:\n\tdoctorId: %d\n\tWorkDay: %s\n",
+            String error = String.format(GET_APPOINTMENT_BY_DOCTOR_ID_FOR_A_DAY_ERROR,
                     AppointmentServiceImpl.class, doctorId, day.toString());
             LOGGER.error(error, ex);
             throw new DAOException(error, ex);
@@ -126,7 +126,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
             return appointmentDAO.getAppointmentByWorkDay(day);
         }catch (DAOException ex){
             String error =
-                    String.format("Failed to пуе appointment in %s method: getAppointmentByWorkDay\nGot parameters:\n\tWorkDay: %s\n",
+                    String.format(GET_APPOINTMENT_BY_WORK_DAY_ERROR,
                             AppointmentServiceImpl.class,day.toString());
             LOGGER.error(error);
             throw new DAOException(error, ex);
@@ -138,7 +138,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
             return appointmentDAO.getAppointmentByWorkDay(workDayId);
         }catch (DAOException ex){
             String error =
-                    String.format("Failed to пуе appointment in %s method: getAppointmentByWorkDay\nGot parameters:\n\tworkDayId: %s\n",
+                    String.format(GET_APPOINTMENT_BY_WORK_DAY_ID_ERROR,
                             AppointmentServiceImpl.class,workDayId.toString());
             LOGGER.error(error);
             throw new DAOException(error, ex);
@@ -150,7 +150,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try{
             appointmentDAO.startAppointment(appointmentId);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: startAppointment\nGot parameters:\n\tappointmentId: %d\n",
+            String error = String.format(START_APPOINTMENT_ERROR,
                     AppointmentServiceImpl.class, appointmentId);
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);
@@ -162,7 +162,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try{
             appointmentDAO.endAppointment(appointmentId);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: endAppointment\nGot parameters:\n\tappointmentId: %d\n",
+            String error = String.format(END_APPOINTMENT_ERROR,
                     AppointmentServiceImpl.class, appointmentId);
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);
@@ -174,7 +174,7 @@ public class AppointmentServiceImpl implements AppointmentService  {
         try{
             appointmentDAO.changeAppointmentStatus(appointmentId, status);
         }catch (DAOException ex){
-            String error = String.format("Failed to get appointment in %s method: changeAppointmentStatus\nGot parameters:\n\tappointmentId: %d\n\tStatus: %s\n",
+            String error = String.format(CHANGE_APPOINTMENT_STATUS_ERROR,
                     AppointmentServiceImpl.class, appointmentId, status.toString());
             LOGGER.error(error,ex);
             throw new DAOException(error,ex);

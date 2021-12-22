@@ -44,23 +44,27 @@ public class WorkDayDAOImpl implements WorkDayDAO {
             workDay.setWorkDayId(jdbcCall.executeFunction(BigDecimal.class, in).toBigInteger());
             return workDay;
         } catch (DataAccessException dataAccessException) {
-            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
-            throw new DAOException("WorkDayDAOImpl error. WorkDay was not created");
+            String error = String.format("Failed to create workDay in %s method: createWorkDay\nGot parameters:\n\tid: %s\n",
+                    WorkDayDAOImpl.class, workDay.toString());
+            LOGGER.error(error, dataAccessException);
+            throw new DAOException(error, dataAccessException);
         }
     }
 
     @Override
-    public void deleteWorkDay(WorkDay workDay) throws DataAccessException {
+    public void deleteWorkDay(BigInteger workDayId) throws DataAccessException {
         try {
             SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
                     .withProcedureName(DELETE_WORK_DAY_PROCEDURE_NAME);
             Map<String, Object> params = new HashMap<>();
-            params.put("WORK_DAY_ID", workDay.getWorkDayId());
+            params.put("WORK_DAY_ID", workDayId);
             SqlParameterSource in = new MapSqlParameterSource(params);
             jdbcCall.execute(in);
         } catch (DataAccessException dataAccessException) {
-            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
-            throw new DAOException("WorkDayDAOImpl error. WorkDay was not deleted");
+            String error = String.format("Failed to delete workDay in %s method: deleteWorkDay\nGot parameters:\n\tworkDay: %d\n",
+                    WorkDayDAOImpl.class, workDayId);
+            LOGGER.error(error, dataAccessException);
+            throw new DAOException(error, dataAccessException);
         }
     }
 
@@ -69,8 +73,10 @@ public class WorkDayDAOImpl implements WorkDayDAO {
         try {
             return jdbcTemplate.query(SELECT_WORK_DAYS_BY_EMPLOYERID, rowMapper, employerId);
         } catch (DataAccessException dataAccessException) {
-            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
-            throw new DAOException("WorkDayDAOImpl error. Failed to get information by employerID");
+            String error = String.format("Failed to get workDay in %s method: getWorkDaysByEmployerId\nGot parameters:\n\temployerId: %d\n",
+                    WorkDayDAOImpl.class,employerId);
+            LOGGER.error(error, dataAccessException);
+            throw new DAOException(error, dataAccessException);
         }
     }
 
@@ -79,8 +85,10 @@ public class WorkDayDAOImpl implements WorkDayDAO {
         try {
             return jdbcTemplate.query(SELECT_WORK_DAYS_BY_DATE, rowMapper, date);
         } catch (DataAccessException dataAccessException) {
-            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
-            throw new DAOException("WorkDayDAOImpl error. Failed to get information by date");
+            String error = String.format("Failed to get workDay in %s method: getWorkDaysByDate\nGot parameters:\n\tdate: %s\n",
+                    WorkDayDAOImpl.class,date);
+            LOGGER.error(error, dataAccessException);
+            throw new DAOException(error, dataAccessException);
         }
     }
 }

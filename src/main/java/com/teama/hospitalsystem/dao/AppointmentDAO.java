@@ -76,7 +76,9 @@ public interface AppointmentDAO {
 
     String SQL_GET_BY_DOCTOR_ID_AND_DAY = SQL_GET_BY_WORKDAY + " AND DOCTORID.OBJECT_ID = ?";
 
-    String SQL_APPOINTMENT_MANIPULATION = "INSERT INTO ATTRIBUTES(ATTR_ID, OBJECT_ID, VALUE) VALUES (?, ?, ?)";
+    String SQL_GET_BY_MONTH = SQL_GET_BY_DOCTOR_ID + " AND regexp_like(EXPECTEDSTART.DATE_VALUE, '?')";
+
+    String SQL_APPOINTMENT_MANIPULATION = "INSERT INTO ATTRIBUTES(ATTR_ID, OBJECT_ID, DATE_VALUE) VALUES (?, ?, ?)";
     String SQL_CHANGE_APPOINTMENT_STATUS = "UPDATE ATTRIBUTES SET LIST_VALUE_ID = ? WHERE OBJECT_ID = ? AND ATTR_ID = 28";
 
     String ID = "ID";
@@ -90,6 +92,19 @@ public interface AppointmentDAO {
     String REFERRAL = "REFERRAL";
     String NXTAPP ="NXTAPP";
     String STATUS ="STATUS";
+
+    String GET_APPOINTMENT_BY_ID_ERROR = "Failed to get appointment in %s method: getAppointmentById\nGot parameters:\n\tid: %d\n";
+    String GET_APPOINTMENT_BY_DOCTOR_ID_ERROR = "Failed to get appointment in %s method: getAppointmentByDoctorId\nGot parameters:\n\tdoctorId: %d\n";
+    String GET_APPOINTMENT_BY_DOCTOR_ID_FOR_A_DAY_ERROR = "Failed to get appointment in %s method: getAppointmentByDoctorIdForADay\nGot parameters:\n\tdoctorId: %d\n\tWorkDay: %s\n";
+    String GET_APPOINTMENT_BY_DOCTOR_ID_FOR_A_MONTH_ERROR = "Failed to get appointment in %s method: getAppointmentByDoctorIdForAMonth\nGot parameters:\n\tdoctorId: %d\n\tMonth: %s\n\tYear: %s\n";
+    String GET_APPOINTMENT_BY_PATIENT_ID_ERROR = "Failed to get appointment in %s method: getAppointmentByPatientId\nGot parameters:\n\tpatientId: %d\n";
+    String GET_APPOINTMENT_BY_PATIENT_FOR_A_DATE_ID_ERROR = "Failed to get appointment in %s method: getAppointmentByPatientIdForADate\nGot parameters:\n\tpatientId: %d\n\tDate: %s\n";
+    String GET_APPOINTMENT_BY_WORK_DAY_ERROR = "Failed to get appointment in %s method: getAppointmentByWorkDay\nGot parameters:\n\tWorkDay: %s\n";
+    String GET_APPOINTMENT_BY_WORK_DAY_ID_ERROR = "Failed to get appointment in %s method: getAppointmentByWorkDay\nGot parameters:\n\tworkDayId: %s\n";
+    String CHANGE_APPOINTMENT_STATUS_ERROR = "Failed to edit appointment in %s method: changeAppointmentStatus\nGot parameters:\n\tappointmentId: %d\n\tstatus:%s\n";
+    String EDIT_APPOINTMENT_ERROR = "Failed to edit appointment in %s method: editAppointment\nGot parameters:\n\tappointment: %s\n\tMap: %s\n";
+    String START_APPOINTMENT_ERROR = "Failed to start appointment in %s method: startAppointment\nGot parameters:\n\tappointmentId: %d\n";
+    String END_APPOINTMENT_ERROR = "Failed to end appointment in %s method: endAppointment\nGot parameters:\n\tappointmentId: %d\n      ";
 
     Appointment createAppointment(Appointment appointment);
 

@@ -30,7 +30,7 @@ public interface WorkDayDAO {
             "AND WORKDAYS.OBJECT_TYPE_ID = " + EAVObjTypesID.WORKDAY +
             "AND DATES.DATE_VALUE = ?";
 
-    void deleteWorkDay(WorkDay workDay);
+    void deleteWorkDay(BigInteger workDayId);
 
     Collection<WorkDay> getWorkDaysByEmployerId(BigInteger employerId);
 
