@@ -24,12 +24,12 @@ public class JwtTokenUtil {
     }
 
 
-    public String generateToken(String login) {
+    public String generateToken(UserDetails userDetails) {
         Date exp = Date.from(LocalDateTime.now().plusDays(3)
                 .atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder()
-                .setSubject(login)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(exp)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

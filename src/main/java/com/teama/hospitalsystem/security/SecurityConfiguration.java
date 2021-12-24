@@ -2,6 +2,9 @@ package com.teama.hospitalsystem.security;
 
 import com.teama.hospitalsystem.util.UserRole;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,7 +22,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final JwtTokenFilter jwtTokenFilter;
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfiguration(JwtTokenFilter jwtTokenFilter, UserDetailsService userDetailsService) {
+    public SecurityConfiguration(JwtTokenFilter jwtTokenFilter, @Lazy UserDetailsService userDetailsService) {
         this.jwtTokenFilter = jwtTokenFilter;
         this.userDetailsService = userDetailsService;
     }
@@ -37,11 +40,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin/*").hasRole(UserRole.ADMIN.name())
-                .antMatchers("/registry/*").hasRole(UserRole.REGISTRY.name())
-                .antMatchers("/doctor/*").hasRole(UserRole.DOCTOR.name())
-                .antMatchers("/patient/*").hasRole(UserRole.PATIENT.name())
-                .antMatchers("/register", "/auth").permitAll()
+                .antMatchers("/api/authorization/login").permitAll()
+                .antMatchers("/api/registry/*").hasAuthority(UserRole.REGISTRY.name())
+                .antMatchers("/api/doctors/*").hasAuthority(UserRole.DOCTOR.name())
+                .antMatchers("/api/user/*").hasAuthority(UserRole.PATIENT.name())
                 .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
@@ -54,5 +56,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

@@ -2,7 +2,6 @@ package com.teama.hospitalsystem.services.impl;
 
 import com.teama.hospitalsystem.dao.UserDAO;
 import com.teama.hospitalsystem.exceptions.DAOException;
-import com.teama.hospitalsystem.exceptions.EntityNotFoundException;
 import com.teama.hospitalsystem.models.User;
 import com.teama.hospitalsystem.services.UsersService;
 import com.teama.hospitalsystem.util.EmployerStatus;
@@ -10,7 +9,7 @@ import com.teama.hospitalsystem.util.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
@@ -22,14 +21,17 @@ public class UsersServiceImpl implements UsersService {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistryServiceImpl.class);
 
     private final UserDAO dao;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsersServiceImpl(UserDAO dao) {
+    public UsersServiceImpl(UserDAO dao, PasswordEncoder passwordEncoder) {
         this.dao = dao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public BigInteger createUser(User user) throws DAOException{
         try{
+            encodePassword(user);
             return dao.createUser(user);
         } catch (DAOException daoException){
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
@@ -40,11 +42,17 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public void editUser(User user) throws DAOException {
         try{
+            encodePassword(user);
             dao.editUser(user);
         } catch (DAOException daoException){
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
             throw daoException;
         }
+    }
+
+    private void encodePassword(User user) {
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
     }
 
     @Override
