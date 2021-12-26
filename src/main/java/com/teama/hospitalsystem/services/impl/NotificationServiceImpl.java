@@ -10,6 +10,8 @@ import com.teama.hospitalsystem.util.MailConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.MailSendException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -44,6 +46,24 @@ public class NotificationServiceImpl implements NotificationService {
         props.put("mail.smtp.auth", mailConfig.getAuth());
         props.put("mail.smtp.starttls.enable", mailConfig.getTtls());
         this.javaMailSender = javaMailSender;
+    }
+
+    @Override
+    public void notifyUserByEmailAboutResetPassword(String email, String token) throws MailSendException {
+        try {
+            SimpleMailMessage mail = new SimpleMailMessage();
+            String message = "Follow this link to reset your password: " + token;
+
+            mail.setTo(email);
+            mail.setFrom("noreply@hospital.com");
+            mail.setSubject("Reset password");
+            mail.setText(message);
+
+            javaMailSender.send(mail);
+        } catch (MailSendException ex) {
+            log.error(ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override

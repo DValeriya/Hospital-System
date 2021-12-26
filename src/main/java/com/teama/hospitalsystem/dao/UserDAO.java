@@ -33,6 +33,9 @@ public interface UserDAO {
 
     String SELECT_USER_BY_ID = SELECT_USERS + " AND USERS.OBJECT_ID = ?";
 
+    String SELECT_USER_BY_EMAIL = SELECT_USERS +
+            " AND EMAIL.VALUE = ?";
+
     String SELECT_USER_BY_LOGIN_WITH_PASSWORD = "SELECT USERS.OBJECT_ID AS USER_ID, LOGIN.VALUE AS USER_LOGIN, USERS.NAME AS USER_NAME, " +
             "PHONENUMBER.VALUE AS PHONENUMBER, EMAIL.VALUE AS EMAIL, BIRTHDATE.DATE_VALUE AS BIRTHDATE, " +
             "PASSWORD.VALUE As PASSWORD, ROLE.LIST_VALUE_ID AS ROLE " +
@@ -91,6 +94,7 @@ public interface UserDAO {
     void editUser(User user);
     User getUserByLogin(BigInteger login);
     User getUserById(BigInteger id);
+    User getUserByEmail(String email);
     Collection<User> getUsersList();
     Collection<User> getUsersListByRole(UserRole role);
     Collection<User> getUsersListByRoleAndStatus(UserRole role, EmployerStatus status);

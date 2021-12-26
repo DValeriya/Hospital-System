@@ -36,6 +36,18 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    public String generateResetPasswordToken(String email) {
+        Date resetExp = Date.from(LocalDateTime.now().plusDays(3)
+                .atZone(ZoneId.systemDefault()).toInstant());
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(resetExp)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
     public String extractLogin(String token) {
         Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
         return claims.getSubject();

@@ -15,6 +15,8 @@ INSERT INTO OBJTYPE (OBJECT_TYPE_ID,PARENT_ID,CODE,NAME,DESCRIPTION)
     VALUES (6, 4, 'DoctorSpecialization', 'Специализация доктора', NULL);
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID,PARENT_ID,CODE,NAME,DESCRIPTION)
     VALUES (7, NULL, 'GeneralInformation', 'Общая информация', NULL);
+INSERT INTO OBJTYPE (OBJECT_TYPE_ID,PARENT_ID,CODE,NAME,DESCRIPTION)
+    VALUES (8, 1, 'ResetPasswordToken', 'Токен для сброса пароля', NULL);
 
 --ATTRTYPE User
 

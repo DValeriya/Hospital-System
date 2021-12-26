@@ -66,6 +66,16 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    public User getUserByEmail(String email) throws DAOException {
+        try {
+            return dao.getUserByEmail(email);
+        } catch (DAOException daoException){
+            LOGGER.error(daoException.getLocalizedMessage(), daoException);
+            throw daoException;
+        }
+    }
+
+    @Override
     public User getUserById(BigInteger id) throws DAOException{
         try {
             return dao.getUserById(id);

@@ -11,4 +11,5 @@ public class EAVObjTypesID {
     public static final int APPOINTMENT = 5;
     public static final int DOCTOR_SPECIALIZATION = 6;
     public static final int GENERAL_INFORMATION = 7;
+    public static final int RESET_PASSWORD_TOKEN = 8;
 }

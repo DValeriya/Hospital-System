@@ -62,7 +62,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public BigInteger createUser(User user) throws DataAccessException {
+    public BigInteger createUser(User user) throws DAOException {
         try{
             SqlParameterSource mapParameters = new MapSqlParameterSource()
                     .addValue(USER_NAME, user.getName())
@@ -81,7 +81,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void editUser(User user) throws DataAccessException {
+    public void editUser(User user) throws DAOException {
         try{
             SqlParameterSource mapParameters = new MapSqlParameterSource()
                     .addValue(USER_ID, user.getId())
@@ -100,17 +100,27 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User getUserByLogin(BigInteger login) throws DataAccessException {
+    public User getUserByEmail(String email) throws DAOException {
         try{
-            return jdbcTemplate.queryForObject(SELECT_USER_BY_LOGIN_WITH_PASSWORD, rowMapperIncludingPassword, login);
+            return jdbcTemplate.queryForObject(SELECT_USER_BY_EMAIL, rowMapper, email);
         } catch (DataAccessException dataAccessException){
             LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
-            throw new DAOException("UserDAOImpl error. Failed to get User by login and password.");
+            throw new DAOException("UserDAOImpl error. Failed to get User by email.");
         }
     }
 
     @Override
-    public User getUserById(BigInteger id) throws DataAccessException {
+    public User getUserByLogin(BigInteger login) throws DAOException {
+        try{
+            return jdbcTemplate.queryForObject(SELECT_USER_BY_LOGIN_WITH_PASSWORD, rowMapperIncludingPassword, login);
+        } catch (DataAccessException dataAccessException){
+            LOGGER.error(dataAccessException.getLocalizedMessage(), dataAccessException);
+            throw new DAOException("UserDAOImpl error. Failed to get User by login.");
+        }
+    }
+
+    @Override
+    public User getUserById(BigInteger id) throws DAOException {
         try{
             return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, rowMapper, id);
         } catch (DataAccessException dataAccessException){

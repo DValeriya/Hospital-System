@@ -13,6 +13,7 @@ public interface UsersService {
     void editUser(User user);
     User getUserByLogin(BigInteger login);
     User getUserById(BigInteger id);
+    User getUserByEmail(String email);
     Collection<User> getUsersList();
     Collection<User> getUsersListByRole(UserRole role);
     Collection<User> getUsersListByRoleAndStatus(UserRole role, EmployerStatus status);
