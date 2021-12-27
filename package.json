@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "heroku_prebuild": "cd src/main/resources/angular && npm i --only=dev && nd build"
+  }
+}
