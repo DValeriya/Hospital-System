@@ -1,14 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-login-page',
-  templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.css']
+  selector: 'app-registration-page',
+  templateUrl: './registration-page.component.html',
+  styleUrls: ['./registration-page.component.css']
 })
-export class LoginPageComponent implements OnInit {
-  loginForm: FormGroup | any;
+export class RegistrationPageComponent implements OnInit {
+
+  registrationForm: FormGroup | any;
   isSubmited = false;
   error: any;
 
@@ -25,11 +26,11 @@ export class LoginPageComponent implements OnInit {
     this.isSubmited = true;
     this.error = null;
 
-    if (this.loginForm.invalid) {
+    if (this.registrationForm.invalid) {
       return;
     }
 
-    const formValue = this.loginForm.value;
+    const formValue = this.registrationForm.value;
     //   this.authService.login(formValue.login, formValue.password)
     //     .subscribe(
     //       () => this.onSuccess(),
@@ -45,9 +46,12 @@ export class LoginPageComponent implements OnInit {
   }
 
   private buildForm() {
-    this.loginForm = this.formBuilder.group({
-      login: [null, Validators.required],
+    this.registrationForm = this.formBuilder.group({
+      fullname: [null, Validators.required],
+      phoneNumber: [null, Validators.required],
+      email: [null, Validators.required],
       password: [null, Validators.required],
     });
   }
+
 }
