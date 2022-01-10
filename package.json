@@ -1,8 +1,5 @@
 {
   "scripts": {
     "heroku_prebuild": "cd src/main/resources/angular && npm i"
-  },
-  "dependencies": {
-    "bootstrap": "^5.1.3"
   }
 }
