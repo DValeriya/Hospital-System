@@ -15,7 +15,7 @@ export class RegistrationService {
   registerUser(user: User) {
     return this.http.post(this.userRegistrationEndpoint, user).pipe(
       tap((value: any) => {
-        return new User(value.);
+        //return new User(value.);
       })
     );
   }
