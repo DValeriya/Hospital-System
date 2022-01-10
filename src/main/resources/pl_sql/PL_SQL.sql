@@ -373,3 +373,100 @@ BEGIN
     DELETE FROM OBJECTS WHERE OBJECT_ID = TOKEN_ID;
     RETURN TOKEN_ID;
 END;
+
+
+CREATE OR REPLACE PROCEDURE PROGNOSIS2
+AS
+    TYPE list1 IS VARRAY(7) OF NUMBER;
+    TYPE in_data IS TABLE OF shape;
+    data_table in_data;
+    prognosis_list list1 := list1() ;
+    prognosis_list2 list1 := list1() ;
+    prognosis VARCHAR(20);
+BEGIN
+    SELECT shape(DOCTOR.OBJECT_ID,
+        AVG((MONTH1END.DATE_VALUE - MONTH1START.DATE_VALUE))*60*24,
+        AVG((MONTH2END.DATE_VALUE - MONTH2START.DATE_VALUE))*60*24,
+        AVG((MONTH3END.DATE_VALUE - MONTH3START.DATE_VALUE))*60*24,
+        AVG((MONTH4END.DATE_VALUE - MONTH4START.DATE_VALUE))*60*24,
+        AVG((MONTH5END.DATE_VALUE - MONTH5START.DATE_VALUE))*60*24,
+        AVG((MONTH6END.DATE_VALUE - MONTH6START.DATE_VALUE))*60*24)
+    BULK COLLECT INTO  data_table FROM OBJREFERENCE
+    LEFT JOIN OBJECTS EMP ON EMP.OBJECT_TYPE_ID = 2
+    LEFT JOIN OBJECTS DOCTOR ON EMP.OBJECT_ID = DOCTOR.PARENT_ID
+    LEFT JOIN ATTRIBUTES MONTH1START ON OBJREFERENCE.REFERENCE = MONTH1START.OBJECT_ID AND MONTH1START.ATTR_ID=21
+        AND MONTHS_BETWEEN(MONTH1START.DATE_VALUE,SYSDATE) < 0
+    LEFT JOIN ATTRIBUTES MONTH1END ON OBJREFERENCE.REFERENCE = MONTH1END.OBJECT_ID AND MONTH1END.ATTR_ID = 22
+        AND MONTHS_BETWEEN(MONTH1END.DATE_VALUE,SYSDATE) >= -1
+    LEFT JOIN ATTRIBUTES MONTH2START ON OBJREFERENCE.REFERENCE = MONTH2START.OBJECT_ID AND MONTH2START.ATTR_ID=21
+        AND MONTHS_BETWEEN(MONTH2START.DATE_VALUE,SYSDATE) < -1
+    LEFT JOIN ATTRIBUTES MONTH2END ON OBJREFERENCE.REFERENCE = MONTH2END.OBJECT_ID AND MONTH2END.ATTR_ID = 22
+        AND MONTHS_BETWEEN(MONTH2END.DATE_VALUE,SYSDATE) >= -2
+    LEFT JOIN ATTRIBUTES MONTH3START ON OBJREFERENCE.REFERENCE = MONTH3START.OBJECT_ID AND MONTH3START.ATTR_ID=21
+        AND MONTHS_BETWEEN(MONTH3START.DATE_VALUE,SYSDATE) < -2
+    LEFT JOIN ATTRIBUTES MONTH3END ON OBJREFERENCE.REFERENCE = MONTH3END.OBJECT_ID AND MONTH3END.ATTR_ID = 22
+        AND MONTHS_BETWEEN(MONTH3END.DATE_VALUE,SYSDATE) >= -3
+    LEFT JOIN ATTRIBUTES MONTH4START ON OBJREFERENCE.REFERENCE = MONTH4START.OBJECT_ID AND MONTH4START.ATTR_ID=21
+        AND MONTHS_BETWEEN(MONTH4START.DATE_VALUE,SYSDATE) < -3
+    LEFT JOIN ATTRIBUTES MONTH4END ON OBJREFERENCE.REFERENCE = MONTH4END.OBJECT_ID AND MONTH4END.ATTR_ID = 22
+        AND MONTHS_BETWEEN(MONTH4END.DATE_VALUE,SYSDATE) >= -4
+    LEFT JOIN ATTRIBUTES MONTH5START ON OBJREFERENCE.REFERENCE = MONTH5START.OBJECT_ID AND MONTH5START.ATTR_ID=21
+        AND MONTHS_BETWEEN(MONTH5START.DATE_VALUE,SYSDATE) < -4
+    LEFT JOIN ATTRIBUTES MONTH5END ON OBJREFERENCE.REFERENCE = MONTH5END.OBJECT_ID AND MONTH5END.ATTR_ID = 22
+        AND MONTHS_BETWEEN(MONTH5END.DATE_VALUE,SYSDATE) >= -5
+    LEFT JOIN ATTRIBUTES MONTH6START ON OBJREFERENCE.REFERENCE = MONTH6START.OBJECT_ID AND MONTH6START.ATTR_ID=21
+        AND MONTHS_BETWEEN(MONTH6START.DATE_VALUE,SYSDATE) < -5
+    LEFT JOIN ATTRIBUTES MONTH6END ON OBJREFERENCE.REFERENCE = MONTH6END.OBJECT_ID AND MONTH6END.ATTR_ID = 22
+        AND MONTHS_BETWEEN(MONTH6END.DATE_VALUE,SYSDATE) >= -6
+    WHERE EMP.PARENT_ID=OBJREFERENCE.OBJECT_ID
+    GROUP BY DOCTOR.OBJECT_ID;
+    FOR i IN data_table.FIRST .. data_table.LAST
+        LOOP
+        prognosis_list := list1();
+        prognosis_list2 := list1();
+            IF (data_table(i).MONTH1 IS NOT NULL ) THEN
+                prognosis_list.extend();
+                prognosis_list(prognosis_list.COUNT) := data_table(i).MONTH1;
+            end if;
+            IF (data_table(i).MONTH2 IS NOT NULL ) THEN
+                prognosis_list.extend();
+                prognosis_list(prognosis_list.COUNT) := data_table(i).MONTH2;
+            end if;
+            IF (data_table(i).MONTH3 IS NOT NULL ) THEN
+                prognosis_list.extend();
+                prognosis_list(prognosis_list.COUNT) := data_table(i).MONTH3;
+            end if;
+            IF (data_table(i).MONTH4 IS NOT NULL ) THEN
+                prognosis_list.extend();
+                prognosis_list(prognosis_list.COUNT) := data_table(i).MONTH4;
+            end if;
+            IF (data_table(i).MONTH5 IS NOT NULL ) THEN
+                prognosis_list.extend();
+                prognosis_list(prognosis_list.COUNT) := data_table(i).MONTH5;
+            end if;
+            IF (data_table(i).MONTH6 IS NOT NULL ) THEN
+                prognosis_list.extend();
+                prognosis_list(prognosis_list.COUNT) := data_table(i).MONTH6;
+            end if;
+            DBMS_OUTPUT.PUT_LINE(prognosis_list.COUNT);
+            prognosis_list2.extend;
+            prognosis_list2(prognosis_list2.COUNT) := prognosis_list(prognosis_list.FIRST);
+            FOR j IN prognosis_list.FIRST .. prognosis_list.COUNT-1
+                LOOP
+                    prognosis_list2.extend();
+                    prognosis_list2(j+1) := .4*prognosis_list(j) + .6*prognosis_list2(j);
+                end loop;
+            prognosis := prognosis_list2(prognosis_list2.LAST);
+            UPDATE ATTRIBUTES SET VALUE = prognosis WHERE ATTR_ID = 18 AND OBJECT_ID = data_table(i).DOCTOR_ID;
+        end loop;
+end;
+
+BEGIN
+    DBMS_SCHEDULER.CREATE_JOB(
+        JOB_NAME => 'Appointment_durations_prognosis',
+        JOB_TYPE => 'PLSQL_BLOCK',
+        JOB_ACTION => 'BEGIN PROGNOSIS2(); END;',
+        REPEAT_INTERVAL => 'FREQ=MONTHLY; BYMONTHDAY=1',
+        ENABLED => TRUE
+        );
+end;
