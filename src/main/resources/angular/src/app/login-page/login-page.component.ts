@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
+import {AuthService} from "../core/api/auth.service";
 
 @Component({
   selector: 'app-login-page',
@@ -10,10 +11,11 @@ import {Router} from "@angular/router";
 export class LoginPageComponent implements OnInit {
   loginForm: FormGroup | any;
   isSubmited = false;
+  isLoading = false;
   error: any;
 
   constructor(private formBuilder: FormBuilder,
-              //private authService: AuthService,
+              private authService: AuthService,
               private router: Router) {
   }
 
@@ -30,10 +32,14 @@ export class LoginPageComponent implements OnInit {
     }
 
     const formValue = this.loginForm.value;
-    //   this.authService.login(formValue.login, formValue.password)
-    //     .subscribe(
-    //       () => this.onSuccess(),
-    //       () => this.onFailed());
+
+    this.isLoading = true;
+
+    this.authService.login(formValue.login, formValue.password)
+      .subscribe({
+        next: () => this.onSuccess(),
+        error: () => this.onFailed()
+      });
   }
 
   private onSuccess() {
@@ -42,6 +48,7 @@ export class LoginPageComponent implements OnInit {
 
   private onFailed() {
     this.error = 'Invalid login or password';
+    this.isLoading = false;
   }
 
   private buildForm() {

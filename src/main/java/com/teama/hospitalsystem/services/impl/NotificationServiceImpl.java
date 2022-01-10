@@ -9,6 +9,7 @@ import com.teama.hospitalsystem.services.NotificationService;
 import com.teama.hospitalsystem.util.MailConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
@@ -35,6 +36,9 @@ public class NotificationServiceImpl implements NotificationService {
     private final UserDAO userDAO;
     private final JavaMailSender javaMailSender;
 
+    @Value("${server.url}")
+    private String url;
+
     public NotificationServiceImpl(UserDAO userDAO,MailConfig mailConfig){
         this.userDAO = userDAO;
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
@@ -52,7 +56,8 @@ public class NotificationServiceImpl implements NotificationService {
     public void notifyUserByEmailAboutResetPassword(String email, String token) throws MailSendException {
         try {
             SimpleMailMessage mail = new SimpleMailMessage();
-            String message = "Follow this link to reset your password: " + token;
+            String message = "Follow this link to reset your password: " + url
+                    + "/password-recovery?token=" + token;
 
             mail.setTo(email);
             mail.setFrom("noreply@hospital.com");
