@@ -41,17 +41,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .httpBasic().disable()
-                .cors().and().csrf().disable()
+//                .cors().and()
+                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/authorization/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/user/create").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/registry/create").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/doctor/create").permitAll()
                 .antMatchers("/api/doctors/{[\\\\d+]}").permitAll()
                 .antMatchers("/api/registry/**").hasAuthority(UserRole.REGISTRY.name())
                 .antMatchers("/api/doctors/**").hasAuthority(UserRole.DOCTOR.name())
                 .antMatchers("/api/user/**").hasAuthority(UserRole.PATIENT.name())
                 .antMatchers("/api/**").authenticated()
-                .antMatchers("/**").permitAll()
+                //.antMatchers("/**").permitAll()
                 .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
@@ -72,13 +76,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8000", "https://hospital-system-app.herokuapp.com/"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8000", "https://hospital-system-app.herokuapp.com/"));
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }

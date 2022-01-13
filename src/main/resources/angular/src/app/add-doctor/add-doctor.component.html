@@ -1,0 +1,141 @@
+<h2 class="mb-4 text-center">Registration</h2>
+
+<div class="flex-column row align-items-center m-0">
+  <form class="col-2" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="fullname" class="mb-2">Fullname:</label>
+      <input
+        id="fullname"
+        class="form-control"
+        name="fullname"
+        type="text"
+        placeholder="Fullname"
+        formControlName="fullname">
+    </div>
+
+    <div class="form-group">
+      <label for="birthDate" class="mb-2 mt-3">Birthday:</label>
+      <input
+        id="birthDate"
+        name="birthDate"
+        class="form-control"
+        type="date"
+        placeholder="Birthday"
+        formControlName="birthDate">
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber" class="mb-2 mt-3">Phone number:</label>
+      <input
+        id="phoneNumber"
+        class="form-control"
+        name="phoneNumber"
+        type="text"
+        placeholder="Phone number"
+        formControlName="phoneNumber">
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="mb-2 mt-3">Email:</label>
+      <input
+        id="email"
+        class="form-control"
+        name="email"
+        type="text"
+        placeholder="Email"
+        formControlName="email">
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="mb-2 mt-3">Password:</label>
+      <input
+        id="password"
+        name="password"
+        class="form-control"
+        type="password"
+        placeholder="Password"
+        formControlName="password">
+    </div>
+
+    <div class="form-group">
+      <label for="hiringDate" class="mb-2 mt-3">Hiring date</label>
+      <input
+        id="hiringDate"
+        class="form-control"
+        name="hiringDate"
+        type="date"
+        placeholder="Hiring date"
+        formControlName="hiringDate">
+    </div>
+
+    <!--    <div class="form-group">-->
+    <!--      <label class="mb-2 mt-3">Status</label>-->
+    <!--      <select formControlName="state">-->
+    <!--        <option *ngFor="let state of states" [ngValue]="state">-->
+    <!--          {{state }}-->
+    <!--        </option>-->
+    <!--    </select>-->
+    <!--    </div>-->
+
+    <div class="form-group">
+      <label class="mb-2 mt-3" for="status">Status</label>
+      <select id="status" class="form-select" (change)="changeStatus($event)" formControlName="status">
+        <option value="" disabled>Choose status</option>
+        <option *ngFor="let status of States" [ngValue]="status">{{status}}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="startWorkingTime" class="mb-2 mt-3">Start working time</label>
+      <input
+        id="startWorkingTime"
+        class="form-control"
+        name="startWorkingTime"
+        type="time"
+        step="60"
+        placeholder="Start working time"
+        formControlName="startWorkingTime">
+    </div>
+
+    <div class="form-group">
+      <label for="endWorkingTime" class="mb-2 mt-3">End working time</label>
+      <input
+        id="endWorkingTime"
+        class="form-control"
+        name="endWorkingTime"
+        type="time"
+        step="60"
+        placeholder="End working time"
+        formControlName="endWorkingTime">
+    </div>
+
+    <div class="form-group">
+      <label for="specialization" class="mb-2 mt-3">Specialization</label>
+      <input
+        id="specialization"
+        class="form-control"
+        name="specialization"
+        type="text"
+        placeholder="Specialization"
+        formControlName="specialization">
+    </div>
+
+    <div class="form-group">
+      <label for="appointmentDuration" class="mb-2 mt-3">Appointment duration</label>
+      <input
+        id="appointmentDuration"
+        class="form-control"
+        name="appointmentDuration"
+        type="time"
+        step="60"
+        placeholder="Appointment duration"
+        formControlName="appointmentDuration">
+    </div>
+
+    <div class="mt-4 d-flex justify-content-center">
+      <button class="pl-3 pr-3 btn btn-primary" type="submit">Register</button>
+    </div>
+  </form>
+
+</div>
+

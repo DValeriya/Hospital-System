@@ -1,15 +1,17 @@
 export class User {
   readonly login: bigint;
-  fullname: string;
+  name: string;
   phoneNumber: string;
-  birthDay: string;
+  email: string;
+  birthDate: Date;
   password: string;
 
-  constructor(login: bigint, fullname: string, phoneNumber: string, birthDay: string, password: string) {
+  constructor(login: bigint, name: string,email: string, phoneNumber: string, birthDate: Date, password: string) {
     this.login = login;
-    this.fullname = fullname;
+    this.name = name;
+    this.email = email;
     this.phoneNumber = phoneNumber;
-    this.birthDay = birthDay;
+    this.birthDate = birthDate;
     this.password = password;
   }
 }

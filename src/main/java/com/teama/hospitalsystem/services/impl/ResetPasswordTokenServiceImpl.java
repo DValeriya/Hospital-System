@@ -73,7 +73,6 @@ public class ResetPasswordTokenServiceImpl implements ResetPasswordTokenService 
     @Override
     public void updateToken(ResetPasswordToken resetPasswordToken) throws DAOException{
         try {
-            System.out.println(resetPasswordToken);
             resetPasswordTokenDAO.updateToken(resetPasswordToken);
         } catch (DAOException daoException) {
             LOGGER.error(daoException.getLocalizedMessage(), daoException);
