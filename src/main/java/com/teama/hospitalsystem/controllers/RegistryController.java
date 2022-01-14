@@ -25,7 +25,7 @@ public class RegistryController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createRegistry(@RequestBody User newUser) {
-        try {
+        try { System.out.println(newUser);
             BigInteger user = registryService.createRegistry(newUser);
             return ResponseEntity.ok(user);
         } catch (DAOException daoException) {

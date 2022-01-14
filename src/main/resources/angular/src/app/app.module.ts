@@ -14,6 +14,9 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { BottomBarComponent } from './bottom-bar/bottom-bar.component';
 import { DoctorsPageComponent } from './doctors-page/doctors-page.component';
 import { DoctorCardComponent } from './doctor-card/doctor-card.component';
+import { AddRegistryComponent } from './add-registry/add-registry.component';
+import { AddDoctorComponent } from './add-doctor/add-doctor.component';
+import { DoctorProfileComponent } from './doctor-profile/doctor-profile.component';
 
 
 @NgModule({
@@ -24,6 +27,9 @@ import { DoctorCardComponent } from './doctor-card/doctor-card.component';
     BottomBarComponent,
     DoctorsPageComponent,
     DoctorCardComponent,
+    AddRegistryComponent,
+    AddDoctorComponent,
+    DoctorProfileComponent,
   ],
   imports: [
     BrowserModule,

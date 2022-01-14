@@ -26,7 +26,9 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody User newUser) {
         try {
-            BigInteger user = usersService.createUser(newUser);
+            System.out.println(newUser);
+            BigInteger userId = usersService.createUser(newUser);
+            User user = usersService.getUserById(userId);
             return ResponseEntity.ok(user);
         } catch (DAOException daoException) {
             return ResponseEntity.badRequest().body(daoException.getMessage());

@@ -23,7 +23,6 @@ export class TokenInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler)
     : Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
     const token = this.authService.token;
-    console.log(token);
     const apiUrl = request.url.startsWith(environment.apiUrl);
 
     if (token !== null && apiUrl) {

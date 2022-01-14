@@ -1,19 +1,22 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
 import {RegistrationService} from "../core/api/registration.service";
-import {User} from "../models/user";
+import {Router} from "@angular/router";
+import {Employer} from "../models/employer";
+import {Doctor} from "../models/doctor";
 
 @Component({
-  selector: 'app-registration-page',
-  templateUrl: './registration-page.component.html',
-  styleUrls: ['./registration-page.component.css']
+  selector: 'app-add-doctor',
+  templateUrl: './add-doctor.component.html',
+  styleUrls: ['./add-doctor.component.css']
 })
-export class RegistrationPageComponent implements OnInit {
+export class AddDoctorComponent implements OnInit {
 
   registrationForm: FormGroup | any;
   isSubmited = false;
   error: any;
+
+  States: any = ['WORK', 'ABSENT', 'DISMISSED', 'SICK', 'BUSINESS_TRIP', 'PERSONAL']
 
   constructor(private formBuilder: FormBuilder,
               private registrationService: RegistrationService,
@@ -22,6 +25,10 @@ export class RegistrationPageComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
+  }
+
+  changeStatus(e : any) {
+    this.registrationForm.status.setValue(e.target.value, {onlySelf: true})
   }
 
   onSubmit() {
@@ -33,14 +40,21 @@ export class RegistrationPageComponent implements OnInit {
     }
 
     const formValue = this.registrationForm.value;
-    const user = new User(BigInt(0),
+    const doctor = new Doctor(BigInt(0),
       formValue.fullname,
       formValue.email,
       formValue.phoneNumber,
       new Date(formValue.birthDate),
-      formValue.password);
+      formValue.password,
+      new Date(formValue.hiringDate),
+      formValue.status,
+      formValue.startWorkingTime,
+      formValue.endWorkingTime,
+      formValue.specialization,
+      formValue.appointmentDuration
+      );
 
-    this.registrationService.registerUser(user)
+    this.registrationService.registerDoctor(doctor)
       .subscribe({
         next: () => this.onSuccess(),
         error: () => this.onFailed()
@@ -62,7 +76,12 @@ export class RegistrationPageComponent implements OnInit {
       phoneNumber: [null, Validators.required],
       email: [null, Validators.required],
       password: [null, Validators.required],
+      hiringDate: [null, Validators.required],
+      status: [''],
+      startWorkingTime: [null, Validators.required],
+      endWorkingTime: [null, Validators.required],
+      specialization: [null, Validators.required],
+      appointmentDuration: [null, Validators.required],
     });
   }
-
 }
