@@ -1,0 +1,15 @@
+
+.bg-second-color{
+    background-color: #26d98a;
+    font-size: 20px;
+}
+.nav-dont-style{
+    color: white;
+    font-size: 20px;
+}
+.nav-link{
+    color: white !important;
+}
+.popup{
+    visibility: hidden;
+}

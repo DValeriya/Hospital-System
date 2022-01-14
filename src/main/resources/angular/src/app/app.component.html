@@ -1,1 +1,5 @@
-<router-outlet></router-outlet>
+<app-top-bar></app-top-bar>
+<div class="container-sm justify-content-center pt-2 main" [style.min-height.px]="innerHeight * 0.833">
+    <router-outlet class=""></router-outlet>
+</div>
+<app-bottom-bar></app-bottom-bar>

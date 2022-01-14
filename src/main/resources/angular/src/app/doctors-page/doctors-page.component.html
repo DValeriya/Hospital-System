@@ -1,0 +1,37 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm">
+            <h2>Doctor's list</h2>
+        </div>
+        <div class="col-sm d-flex justify-content-end">
+            <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#filters">Filters</button>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <div id="filters" class="collapse row">
+                <div class="col-sm">
+                    <div>
+                        <p>Specialization: </p>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="row">
+                        <p class="col-sm-2">Date: </p>
+                        <div class="col-sm-8">
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </div>
+    </div>
+    <div class="container-fluid py-4">
+        <div class="py-2">
+            <app-doctor-card>
+            </app-doctor-card>
+        </div>
+        <div class="py-2">
+            <app-doctor-card>
+            </app-doctor-card>
+        </div>
+    </div>
+</div>
