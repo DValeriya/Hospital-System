@@ -107,3 +107,17 @@ DROP SEQUENCE USER_LOGIN_SEQ;
 
 CREATE SEQUENCE OBJECT_ID_SEQ START WITH 2000;
 CREATE SEQUENCE USER_LOGIN_SEQ START WITH 100000000 INCREMENT BY 10;
+
+
+
+CREATE UNIQUE INDEX email_dup
+    ON ATTRIBUTES( CASE WHEN attr_id = 6
+                            THEN VALUE`
+                            ELSE NULL
+                        END );
+
+CREATE UNIQUE INDEX phone_dup
+    ON ATTRIBUTES( CASE WHEN attr_id = 4
+                            THEN VALUE`
+                            ELSE NULL
+                        END );
