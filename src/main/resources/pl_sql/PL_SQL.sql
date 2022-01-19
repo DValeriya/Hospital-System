@@ -470,3 +470,119 @@ BEGIN
         ENABLED => TRUE
         );
 end;
+
+
+
+
+
+
+
+CREATE OR REPLACE TYPE list_workdays AS OBJECT(
+work_day_id varchar(20),
+employer_id varchar(20),
+work_date DATE,
+appointment_duration varchar(8),
+start_working_time varchar(8),
+end_working_time varchar(8));
+
+CREATE OR REPLACE TYPE list_doctors AS OBJECT(
+employer_id number,
+doctor_id number);
+
+CREATE OR REPLACE TYPE list_cal_date AS OBJECT(
+cal_date date);
+
+CREATE OR REPLACE PROCEDURE appointment_generation AS
+
+TYPE in_data IS TABLE OF list_workdays;
+data_table in_data;
+test_data DATE;
+end_time INTERVAL DAY TO SECOND;
+start_time INTERVAL DAY TO SECOND;
+duration_data INTERVAL DAY TO SECOND;
+APP_ID NUMBER;
+
+TYPE in_data2 IS TABLE OF list_doctors;
+data_table2 in_data2;
+
+TYPE in_data3 IS TABLE OF list_cal_date;
+data_table3 in_data3;
+
+WORK_DAY_ID NUMBER;
+
+BEGIN
+    SELECT list_doctors(EMP.OBJECT_ID, DOCTOR_DATA.VALUE)
+    BULK COLLECT INTO data_table2
+    FROM OBJECTS EMP
+    LEFT JOIN ATTRIBUTES DOCTOR_DATA ON DOCTOR_DATA.OBJECT_ID = EMP.OBJECT_ID
+    AND DOCTOR_DATA.ATTR_ID = 13
+    WHERE EMP.OBJECT_TYPE_ID = 2 AND DOCTOR_DATA.VALUE = 1;
+
+    SELECT list_cal_date(CAL_DATE )
+    BULK COLLECT INTO data_table3 FROM(
+    SELECT (ADD_MONTHS(CURRENT_DATE, 1) + ROWNUM - 1) AS CAL_DATE
+    FROM ALL_OBJECTS
+    WHERE ROWNUM <= ADD_MONTHS(LAST_DAY(SYSDATE), 1) - ADD_MONTHS(CURRENT_DATE, 1) + 1 )
+    WHERE TO_CHAR(CAL_DATE, 'DY', 'NLS_DATE_LANGUAGE=AMERICAN') NOT IN ('SAT', 'SUN');
+
+    FOR i IN data_table2.FIRST..data_table2.LAST
+    LOOP
+        FOR j IN data_table3.FIRST..data_table3.LAST
+        LOOP
+            SELECT OBJECT_ID_SEQ.NEXTVAL INTO WORK_DAY_ID FROM DUAL;
+            INSERT INTO OBJECTS(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME)
+            VALUES(WORK_DAY_ID, data_table2(i).employer_id, 3, WORK_DAY_ID);
+            INSERT INTO ATTRIBUTES(ATTR_ID, OBJECT_ID, DATE_VALUE)
+            VALUES(15, WORK_DAY_ID, data_table3(j).cal_date);
+        END LOOP;
+    END LOOP;
+
+    SELECT list_workdays(WORKDAYS.OBJECT_ID, WORKDAYS.PARENT_ID, DATES.DATE_VALUE,
+                     APPOINTMENTDURATION.VALUE, START_WORKING_TIME.VALUE, END_WORKING_TIME.VALUE)
+    BULK COLLECT INTO data_table
+    FROM OBJECTS WORKDAYS
+    JOIN ATTRIBUTES DATES ON DATES.OBJECT_ID = WORKDAYS.OBJECT_ID
+    AND DATES.ATTR_ID = 15
+    AND WORKDAYS.OBJECT_TYPE_ID = 3
+    JOIN OBJECTS DOCTORDATA ON DOCTORDATA.PARENT_ID = WORKDAYS.PARENT_ID
+    JOIN ATTRIBUTES APPOINTMENTDURATION ON APPOINTMENTDURATION.OBJECT_ID = DOCTORDATA.OBJECT_ID
+    AND APPOINTMENTDURATION.ATTR_ID = 18
+    JOIN OBJECTS EMP ON EMP.OBJECT_ID = WORKDAYS.PARENT_ID
+    JOIN ATTRIBUTES START_WORKING_TIME ON START_WORKING_TIME.OBJECT_ID = EMP.OBJECT_ID
+    AND START_WORKING_TIME.ATTR_ID = 11
+    JOIN ATTRIBUTES END_WORKING_TIME ON END_WORKING_TIME.OBJECT_ID = EMP.OBJECT_ID
+    AND END_WORKING_TIME.ATTR_ID = 12;
+
+    FOR i IN data_table.FIRST..data_table.LAST
+    LOOP
+        end_time := to_dsinterval('0 ' ||substr(data_table(i).end_working_time, 1, 8));
+        start_time := to_dsinterval('0 ' ||substr(data_table(i).start_working_time, 1, 8));
+        duration_data := to_dsinterval('0 ' ||substr(data_table(i).appointment_duration, 1, 8));
+
+        while(start_time < end_time)
+        LOOP
+            SELECT OBJECT_ID_SEQ.nextval INTO APP_ID FROM DUAL;
+            INSERT INTO OBJECTS (OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME)
+            VALUES (APP_ID, NULL, 5, CONCAT('appointment', TO_CHAR(APP_ID)));
+            INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE)
+            VALUES (19, APP_ID, CONCAT(data_table(i).work_date, substr(start_time, 11,9)));
+
+            start_time:=start_time + duration_data;
+
+            INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE)
+            VALUES (20, APP_ID, CONCAT(data_table(i).work_date, substr(start_time, 11,9)));
+            INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, LIST_VALUE_ID)
+            VALUES (28, APP_ID, 11);
+        END LOOP;
+    END LOOP;
+END;
+
+
+BEGIN
+    DBMS_SCHEDULER.CREATE_JOB(
+    JOB_NAME => 'Appointment_generation_job',
+    JOB_TYPE => 'STORED_PROCEDURE',
+    JOB_ACTION => 'appointment_generation',
+    REPEAT_INTERVAL => 'FREQ=MONTHLY; BYMONTHDAY=1'
+);
+END;
